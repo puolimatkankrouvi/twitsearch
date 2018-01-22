@@ -21,14 +21,15 @@ const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 function search(req,res,query){
 	parameters = { 'q': query};
 
+  var headers = {'Authorization': 'token'}
+
 	var encodedQuery = encodeURIComponent(query);
-	axios.get(twitter_search_url + 'q=' + encodedQuery)
+  var url = twitter_search_url + 'q=' + encodedQuery;
+	axios.get( url , {'headers': headers})
 		.then( (res) => {
 			
 		});
 }
-
-const askTokenURI = 'http://localhost:3000/auth';
 
 app.get('/auth', (req,res) => {
 
@@ -41,15 +42,16 @@ app.get('/auth', (req,res) => {
     null
   );
 
-  oauth2.getOAuthAccessToken('',
-    {'grant_type':'client_credentials'},
-    (error, access_token, refresh_token, result) => {
+  oauth2.getOAuthAccessToken(
+                    '',
+                    {'grant_type':'client_credentials'},
+                    (error, access_token, refresh_token, result) => {
       if(error){
         console.error('Access token error',error);
         return res.status(300).json('Authentication failed');
       }
       //Create token based on result and return response
-      return res.status(200).json(access_token);
+      return res.status(200).json('Bearer ' + access_token);
   });
 });
 
