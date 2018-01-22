@@ -1,30 +1,45 @@
 const express = require('express');
 const path = require('path');
-
+const oauth2 = require('simple-oauth2');
 
 const axios = require('axios');
-const Oauth2 = require('client-oauth2')
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const credentials = require('./credentials.js');
+
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
+const appConsumerKey = credentials.getConsumerKey();
+const appConsumerSecret = credentials.getConsumerSecret();
 
+const tokenAddress = 'https://api.twitter.com/oauth2/token';
 
-var twitterAuth = new Oauth2({
-  clientId: '',
-  clientSecret: '',
-  accessTokenUri: '',
-  authorizationUri: '',
-  redirectUri: ''
+const oauth2Confiq = {
+  client: {
+    id: appConsumerKey,
+    secret: appConsumerSecret
+  },
+  auth: {
+    tokenHost: tokenAddress
+  }
+};
+
+oauth2.create(oauth2Confiq);
+
+// Authorization oauth2 URI
+const authorizationUri = oauth2.authorizationCode.authorizeURL({
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: '',
+  state: ''
 });
 
 //
-function authenticate(){
-	//Oauth
-
+function getAccessToken(){
+	//Oauth2
+  
 }
 
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
