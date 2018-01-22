@@ -1,11 +1,11 @@
 const express = require('express');
 const path = require('path');
-const oauth2 = require('simple-oauth2');
+const OAuth2 = require('oauth').OAuth2;
 
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const credentials = require('./credentials.js');
 
@@ -15,33 +15,6 @@ app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 const appConsumerKey = credentials.getConsumerKey();
 const appConsumerSecret = credentials.getConsumerSecret();
 
-const tokenAddress = 'https://api.twitter.com/oauth2/token';
-
-//simple-oauth2
-const oauth2Confiq = {
-  client: {
-    id: appConsumerKey,
-    secret: appConsumerSecret
-  },
-  auth: {
-    tokenHost: tokenAddress
-  }
-};
-
-oauth2.create(oauth2Confiq);
-
-// Authorization oauth2 URI
-const authorizationUri = oauth2.authorizationCode.authorizeURL({
-  redirect_uri: 'http://localhost:3000/callback',
-  scope: '',
-  state: ''
-});
-
-//
-function getAccessToken(){
-	//Oauth2
-  
-}
 
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 
@@ -54,6 +27,31 @@ function search(req,res,query){
 			
 		});
 }
+
+const askTokenURI = 'http://localhost:3000/auth';
+
+app.get('/auth', (req,res) => {
+
+  var oauth2 = new OAuth2(
+    appConsumerKey,
+    appConsumerSecret, 
+    'https://api.twitter.com/', 
+    null,
+    'oauth2/token', 
+    null
+  );
+
+  oauth2.getOAuthAccessToken('',
+    {'grant_type':'client_credentials'},
+    (error, access_token, refresh_token, result) => {
+      if(error){
+        console.error('Access token error',error);
+        return res.status(300).json('Authentication failed');
+      }
+      //Create token based on result and return response
+      return res.status(200).json(access_token);
+  });
+});
 
 // Server request
 app.get('/search', (req, res) => {
