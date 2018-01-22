@@ -24,7 +24,7 @@ const appConsumerSecret = credentials.getConsumerSecret();
 
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 
-function search(query){
+function search(query, access_token){
 
 
   var headers = {'Authorization': 'token'}
@@ -45,9 +45,10 @@ function search(query){
 /*
   TODO:
   Getting the token for search-function
+  Next as function chaining?
 */
 
-app.get('/auth', (req,res) => {
+function auth(next){
 
   var oauth2 = new OAuth2(
     appConsumerKey,
@@ -67,7 +68,7 @@ app.get('/auth', (req,res) => {
         return res.status(300).json('Authentication failed');
       }
       //Create token based on result and return response
-      return res.status(200).json('Bearer ' + access_token);
+      return next('Bearer ' + access_token);
   });
 });
 
