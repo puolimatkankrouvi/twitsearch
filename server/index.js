@@ -17,6 +17,7 @@ const appConsumerSecret = credentials.getConsumerSecret();
 
 const tokenAddress = 'https://api.twitter.com/oauth2/token';
 
+//simple-oauth2
 const oauth2Confiq = {
   client: {
     id: appConsumerKey,
