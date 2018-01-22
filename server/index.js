@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const OAuth2 = require('oauth').OAuth2;
 
+const bodyParser = require('body-parser');
+
 const axios = require('axios');
 
 const app = express();
@@ -12,14 +14,18 @@ const credentials = require('./credentials.js');
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
+//Body parser
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
 const appConsumerKey = credentials.getConsumerKey();
 const appConsumerSecret = credentials.getConsumerSecret();
 
 
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 
-function search(req,res,query){
-	parameters = { 'q': query};
+function search(query){
+
 
   var headers = {'Authorization': 'token'}
 
@@ -27,9 +33,19 @@ function search(req,res,query){
   var url = twitter_search_url + 'q=' + encodedQuery;
 	axios.get( url , {'headers': headers})
 		.then( (res) => {
-			
-		});
+      return res.json();
+		})
+    .catch( (error) => {
+      console.log(error);
+      return {};
+    });
 }
+
+
+/*
+  TODO:
+  Getting the token for search-function
+*/
 
 app.get('/auth', (req,res) => {
 
@@ -55,8 +71,18 @@ app.get('/auth', (req,res) => {
   });
 });
 
-// Server request
+
 app.get('/search', (req, res) => {
+  // /search?q=#query
+  query = req.query.q; 
+  search(query);
+  res.set('Content-Type', 'application/json');
+  res.send('{"message":"Hello from the custom server!"}');
+});
+
+app.post('/search', (req, res) => {
+  var result = search(query);
+  console.log(result);
   res.set('Content-Type', 'application/json');
   res.send('{"message":"Hello from the custom server!"}');
 });
