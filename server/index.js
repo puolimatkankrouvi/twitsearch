@@ -9,6 +9,7 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+//Credentials are secret and not included in github
 const credentials = require('./credentials.js');
 
 // Priority serve any static files.
@@ -24,66 +25,88 @@ const appConsumerSecret = credentials.getConsumerSecret();
 
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 
-function search(query, access_token){
+function search(req,res,query){
 
 
-  var headers = {'Authorization': 'token'}
+  var headers = {'Authorization': 'Bearer ' + res.locals.accessToken }
 
-	var encodedQuery = encodeURIComponent(query);
-  var url = twitter_search_url + 'q=' + encodedQuery;
-	axios.get( url , {'headers': headers})
-		.then( (res) => {
-      return res.json();
-		})
+  var encodedQuery = encodeURIComponent(query);
+  var url = twitter_search_url + '?q=' + encodedQuery;
+  axios.get( url , {'headers': headers}, )
+	.then( (res) => {
+	  if(res.status == 200){
+	  	return res.data;
+	  }
+	  else{
+	  	return {'message':'Error in search'};
+	  }
+	})
     .catch( (error) => {
-      console.log(error);
-      return {};
+      return {'message':'Error in search'};
     });
 }
 
 
 /*
   TODO:
-  Getting the token for search-function
-  Next as function chaining?
+  Search not getting query parameter if it has a hashtag
+  Search not ready in get('/search') before sending result as response
+  solution: make it callback
 */
 
-function auth(next){
 
-  var oauth2 = new OAuth2(
-    appConsumerKey,
-    appConsumerSecret, 
-    'https://api.twitter.com/', 
-    null,
-    'oauth2/token', 
-    null
-  );
 
-  oauth2.getOAuthAccessToken(
-                    '',
-                    {'grant_type':'client_credentials'},
-                    (error, access_token, refresh_token, result) => {
-      if(error){
-        console.error('Access token error',error);
-        return res.status(300).json('Authentication failed');
-      }
-      //Create token based on result and return response
-      return next('Bearer ' + access_token);
+function initGlobals(req,res,next){
+	res.locals = {
+		accessToken: undefined,
+	};
+	next();
+}
+
+
+
+function authenticate(req,res,next){
+
+	var oauth2 = new OAuth2(
+	  appConsumerKey,
+	  appConsumerSecret, 
+	  'https://api.twitter.com/', 
+	   null,
+	   'oauth2/token', 
+	   null
+	);
+
+	oauth2.getOAuthAccessToken(
+	                '',
+	                {'grant_type':'client_credentials'},
+	                (error, access_token, refresh_token, result) => {
+	  if(error){
+	    console.log('Access token error');
+	  }
+	  //Create token based on result and return response
+	  res.locals.accessToken = access_token;
+	  next();
+	});
+
+};
+
+app.use(initGlobals, authenticate, search);
+
+app.get('/search', authenticate , (req, res) => {
+  // url: /search?q=#query
+  query = req.query.q;
+  console.log('asdjalskjd');
+  search(req,res,query, (result) => {
+    res.set('Content-Type', 'application/json');
+    console.log(result);
+    res.send(result);	
   });
+
 });
 
-
-app.get('/search', (req, res) => {
-  // /search?q=#query
-  query = req.query.q; 
-  search(query);
-  res.set('Content-Type', 'application/json');
-  res.send('{"message":"Hello from the custom server!"}');
-});
-
-app.post('/search', (req, res) => {
-  var result = search(query);
-  console.log(result);
+app.post('/search', authenticate, (req, res) => {
+  var query = res.data();
+  var result = search(req,res,query);
   res.set('Content-Type', 'application/json');
   res.send('{"message":"Hello from the custom server!"}');
 });
