@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 //Credentials are secret and not included in github
 const credentials = require('./credentials.js');
@@ -25,24 +25,25 @@ const appConsumerSecret = credentials.getConsumerSecret();
 
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 
-function search(req,res,query){
-
+function search(req,res,query, next){
 
   var headers = {'Authorization': 'Bearer ' + res.locals.accessToken }
 
   var encodedQuery = encodeURIComponent(query);
   var url = twitter_search_url + '?q=' + encodedQuery;
+  console.log(url);
   axios.get( url , {'headers': headers}, )
 	.then( (res) => {
 	  if(res.status == 200){
-	  	return res.data;
+	  	console.log('testi2');
+	  	next(res.data);
 	  }
 	  else{
-	  	return {'message':'Error in search'};
+	  	next({'message':'Error in search'});
 	  }
 	})
     .catch( (error) => {
-      return {'message':'Error in search'};
+      next({'message':'Error in search'});
     });
 }
 
@@ -50,8 +51,6 @@ function search(req,res,query){
 /*
   TODO:
   Search not getting query parameter if it has a hashtag
-  Search not ready in get('/search') before sending result as response
-  solution: make it callback
 */
 
 
@@ -95,7 +94,6 @@ app.use(initGlobals, authenticate, search);
 app.get('/search', authenticate , (req, res) => {
   // url: /search?q=#query
   query = req.query.q;
-  console.log('asdjalskjd');
   search(req,res,query, (result) => {
     res.set('Content-Type', 'application/json');
     console.log(result);
@@ -107,8 +105,10 @@ app.get('/search', authenticate , (req, res) => {
 app.post('/search', authenticate, (req, res) => {
   var query = res.data();
   var result = search(req,res,query);
-  res.set('Content-Type', 'application/json');
-  res.send('{"message":"Hello from the custom server!"}');
+  search(req,res,query, (result) => {
+    res.set('Content-Type', 'application/json');
+    res.send(result);	
+  });
 });
 
 
