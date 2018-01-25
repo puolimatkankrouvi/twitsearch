@@ -37,7 +37,6 @@ function search(req,res,query, next){
   axios.get( url , {'headers': headers}, )
 	.then( (res) => {
 	  if(res.status == 200){
-	  	console.log('testi2');
 	  	next(res.data);
 	  }
 	  else{
@@ -84,7 +83,7 @@ function authenticate(req,res,next){
 	  if(error){
 	    console.log('Access token error');
 	  }
-	  //Create token based on result and return response
+	  //Create token based on result
 	  res.locals.accessToken = access_token;
 	  next();
 	});
