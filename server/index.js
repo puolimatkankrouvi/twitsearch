@@ -9,8 +9,10 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-//Credentials are secret and not included in github
+//Credentials are secret and not included in Github
 const credentials = require('./credentials.js');
+
+const db = require('./db.js');
 
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
@@ -96,8 +98,9 @@ app.get('/search', authenticate , (req, res) => {
   query = req.query.q;
   search(req,res,query, (result) => {
     res.set('Content-Type', 'application/json');
-    console.log(result);
-    res.send(result);	
+    res.send(result);
+    //Not working yet
+    //db.saveTweets(result);
   });
 
 });
@@ -107,7 +110,7 @@ app.post('/search', authenticate, (req, res) => {
   var result = search(req,res,query);
   search(req,res,query, (result) => {
     res.set('Content-Type', 'application/json');
-    res.send(result);	
+    res.send(result);
   });
 });
 

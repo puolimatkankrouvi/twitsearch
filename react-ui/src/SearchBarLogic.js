@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Redux from 'redux';
+import Request from 'react-axios';
 
 import SearchBar from './SearchBar';
 
@@ -7,21 +8,22 @@ import SearchBar from './SearchBar';
 class SearchBarLogic extends Component{
 
 
-	
+	handleChange(value){
+		<Request method="post" url="/search" data={this.state.data} >
+	}
 
-	constructor(props){
-		super(props);
+	constructor(){
 		this.state = {
-			query: '',
+			data: [],
 			sent: false
-		};
+		}
 	}
 
 
 
 	render(){
-		<div className="Header">
-			<SearchBar />
+		<div className="Search-bar">
+			<SearchBar {...this.props} handleChange={this.handleChange} />
 		</div>
 	}
 }
