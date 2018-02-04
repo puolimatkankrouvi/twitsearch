@@ -3,28 +3,57 @@ import Redux from 'redux';
 import Request from 'react-axios';
 
 import SearchBar from './SearchBar';
+//import SearchBar from 'material-ui-search-bar';
 
 
 class SearchBarLogic extends Component{
 
 
 	handleChange(value){
-		<Request method="post" url="/search" data={this.state.data} >
+		//Sends action for changing text
+		return{
+			type: 'CHANGE_TEXT',
+			value
+		}
+
 	}
 
-	constructor(){
+	sendSearch(){
+		<Request method="post" url="/search" data={this.state.text} />
+	}
+
+	constructor(props){
+		super(props);
 		this.state = {
-			data: [],
+			text: '',
 			sent: false
+		}
+	}
+
+	reducer(state=[], action){
+		switch(action.type){
+			case('COMPLETE_SEARCH'):
+				return state.concat([{text: state.text, sent:true}])
+			case('CHANGE_TEXT'):
+				return state.concat([{text: action.text, sent:false}])
+			default:
+				return state
 		}
 	}
 
 
 
 	render(){
-		<div className="Search-bar">
-			<SearchBar {...this.props} handleChange={this.handleChange} />
-		</div>
+		return(
+			<div className="Search-bar">
+				<SearchBar
+						onChange={this.handleChange}
+						onSubmit={this.sendSearch}
+				/>
+			</div>
+		)
 	}
 }
 
+
+export default SearchBarLogic;

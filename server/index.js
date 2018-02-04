@@ -92,7 +92,7 @@ function authenticate(req,res,next){
 
 app.use(initGlobals, authenticate, search);
 
-app.get('/search', authenticate , (req, res) => {
+app.get('/searchget', authenticate , (req, res) => {
   // url: /search?q=#query
   query = req.query.q;
   search(req,res,query, (result) => {

@@ -9,10 +9,12 @@ class Header extends Component{
 
 
 	render(){
-		<div className="Header">
-			<h1 className="App-title">Twitsearch</h1>
-			<SearchBarLogic />
-		</div>
+		return(
+			<div className="Header">
+				<h1 className="App-title">Twitsearch</h1>
+				<SearchBarLogic />
+			</div>
+		)
 	}
 }
 

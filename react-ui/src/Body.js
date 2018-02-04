@@ -52,3 +52,5 @@ class Body extends Component{
 		</div>
 	}
 }
+
+export default Body;

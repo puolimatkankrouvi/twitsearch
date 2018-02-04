@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Redux from 'redux';
-import Search from 'react-search-box';
+
 
 
 class SearchBar extends Component{
@@ -8,14 +7,13 @@ class SearchBar extends Component{
 
 
 	render(){
-		<div className="SearchBar">
-			<Search
-            	data={ this.state.data }
-            	onChange={ this.handleChange.bind(this) }
-            	placeholder="hakusana"
-            	class="search-class"
-            	searchKey="query"
-			/>
-		</div>
+		return(
+			<form onSubmit={this.handleSubmit}>
+				<input ref="" onChange={this.handleChange} placeholder="Search..." />
+				<input type="submit" value="Go" className="btn btn-default" />
+			</form>
+		)
 	}
 }
+
+export default SearchBar;
