@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
-import Redux from 'redux';
+import {createStore} from 'redux';
 import Request from 'react-axios';
 
+import {changeText} from './actions.js';
+import {search_reducer} from './reducers.js';
+
 import SearchBar from './SearchBar';
-//import SearchBar from 'material-ui-search-bar';
+
+let store = createStore(search_reducer);
 
 
 class SearchBarLogic extends Component{
 
 
 	handleChange(value){
-		//Sends action for changing text
-		return{
-			type: 'CHANGE_TEXT',
-			value
-		}
-
+		//Dispatches action for changing text
+		//The value is Proxy now
+		store.dispatch(changeText(value));
+		console.log(store.getState());
 	}
 
 	sendSearch(){
@@ -27,18 +29,9 @@ class SearchBarLogic extends Component{
 		this.state = {
 			text: '',
 			sent: false
-		}
-	}
-
-	reducer(state=[], action){
-		switch(action.type){
-			case('COMPLETE_SEARCH'):
-				return state.concat([{text: state.text, sent:true}])
-			case('CHANGE_TEXT'):
-				return state.concat([{text: action.text, sent:false}])
-			default:
-				return state
-		}
+		};
+		this.handleChange.bind(this);
+		this.sendSearch.bind(this);
 	}
 
 
@@ -47,8 +40,8 @@ class SearchBarLogic extends Component{
 		return(
 			<div className="Search-bar">
 				<SearchBar
-						onChange={this.handleChange}
-						onSubmit={this.sendSearch}
+						handleChange={this.handleChange}
+						handleSubmit={this.sendSearch}
 				/>
 			</div>
 		)
