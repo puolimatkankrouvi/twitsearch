@@ -9,7 +9,7 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-//Credentials are secret and not included in Github
+//Credentials are secret
 const credentials = require('./credentials.js');
 
 const db = require('./db.js');
@@ -48,14 +48,6 @@ function search(req,res,query, next){
     });
 }
 
-
-/*
-  TODO:
-  Search not getting query parameter if it has a hashtag
-*/
-
-
-
 function initGlobals(req,res,next){
 	res.locals = {
 		accessToken: undefined,
@@ -66,7 +58,6 @@ function initGlobals(req,res,next){
 
 
 function authenticate(req,res,next){
-
 	var oauth2 = new OAuth2(
 	  appConsumerKey,
 	  appConsumerSecret, 
@@ -93,8 +84,8 @@ function authenticate(req,res,next){
 app.use(initGlobals, authenticate, search);
 
 app.get('/searchget', authenticate , (req, res) => {
-  // url: /search?q=#query
-  query = req.query.q;
+  // url: /search?q=&23query
+  const query = req.query.q;
   search(req,res,query, (result) => {
     res.set('Content-Type', 'application/json');
     res.send(result);
