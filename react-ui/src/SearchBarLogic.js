@@ -20,11 +20,11 @@ class SearchBarLogic extends Component {
 	handleChange(value){
 		//Dispatches action for changing text
 		//The value is Proxy now
-		store.dispatch(changeText(value));
+		this.props.dispatch(changeText(value));
 	}
 	
 	sendSearch(){
-		const { searchText } = this.props;
+		const searchText = this.props.searchText;
 		if (searchText) {
 			axios.post("localhost:8000/search/", searchText)
 				.then(result => {
@@ -45,8 +45,8 @@ class SearchBarLogic extends Component {
 	}
 }
 
-function mapStateToProps(state){
-	return {searchText: state.text};
+function mapStateToProps(dispatch, state){
+	return {searchText: state.text, dispatch};
 }
 
 export default connect(mapStateToProps)(SearchBarLogic);
