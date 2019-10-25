@@ -35,18 +35,18 @@ class SearchBarLogic extends Component {
 	
 	render(){
 		return(
-			<div className="Search-bar">
 				<SearchBar
+					searchText={this.props.searchText}
 					handleChange={this.handleChange}
 					handleSubmit={this.sendSearch}
+					className="Search-bar"
 				/>
-			</div>
 		)
 	}
 }
 
-function mapStateToProps(dispatch, state){
-	return {searchText: state.text, dispatch};
+function mapStateToProps(dispatch, ownState){
+	return {searchText: ownState.text, dispatch};
 }
 
 export default connect(mapStateToProps)(SearchBarLogic);
