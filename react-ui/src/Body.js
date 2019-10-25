@@ -1,56 +1,18 @@
-import React, { Component } from 'react';
-import Redux from 'redux';
+import React from 'react';
+import {connect} from "react-redux";
 import './Body.css';
 
 
-class Body extends Component{
-
-
-	constructor(props) {
-   		super(props);
-    	this.state = {
-      		message: null,
-      		fetching: true
-    	};
-  	}
-
-
-	componentDidMount() {
-	  fetch('/api')
-	    .then(response => {
-	      if (!response.ok) {
-	        throw new Error(`status ${response.status}`);
-	      }
-	      return response.json();
-	    })
-	    .then(json => {
-	      this.setState({
-	        message: json.message,
-	        fetching: false
-	      });
-	    }).catch(e => {
-	      this.setState({
-	        message: `API call failed: ${e}`,
-	        fetching: false
-	      });
-	    })
-	}
-	
-
-	constructor(props){
-		super(props);
-	}
-
-
-
+class Body extends React.PureComponent{
 	render(){
-		<div className="Body">
-			<Results />
-			{this.state.fetching
-              ? 'Fetching message from API'
-              : this.state.message}
+		return <div className="Body">
+			{this.props.searchResult ? JSON.stringify(this.props.searchResult): ""}
 		</div>
 	}
 }
 
-export default Body;
+function mapStateToProps(state) {
+	return {searchResult: state.searchResult};
+}
+
+export default connect(mapStateToProps)(Body);

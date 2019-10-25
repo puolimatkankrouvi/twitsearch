@@ -19,7 +19,7 @@ class SearchBar extends Component {
 			<div>
 			<InputText
 				value={this.props.searchText}
-				onChange={this.props.handleChange}
+				onChange={ev => this.props.handleChange(ev.target.value)}
 				placeholder={"...Search from tweets"}
 			/>
 			<Button

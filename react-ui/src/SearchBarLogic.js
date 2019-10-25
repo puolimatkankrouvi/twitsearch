@@ -2,17 +2,13 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import axios from 'axios';
 
-import {changeText} from './actions.js';
+import {changeText, searchToState} from './actions.js';
 
 import SearchBar from './SearchBar';
 
 class SearchBarLogic extends Component {
 	constructor(props){
 		super(props);
-		this.state = {
-			text: '',
-			sent: false
-		};
 		this.handleChange = this.handleChange.bind(this);
 		this.sendSearch = this.sendSearch.bind(this);
 	}
@@ -25,13 +21,14 @@ class SearchBarLogic extends Component {
 	
 	sendSearch(){
 		const searchText = this.props.searchText;
-		console.info(searchText);
 		if (searchText) {
 			axios.post("localhost:8000/search/", searchText)
 				.then(result => {
-					console.info(result);
+					this.props.dispatch(searchToState(result));
 				});
 		}
+
+		this.props.dispatch(changeText(""));
 	}
 	
 	render(){
@@ -46,8 +43,9 @@ class SearchBarLogic extends Component {
 	}
 }
 
-function mapDispatchToProps(dispatch, state){
-	return {searchText: state.text, dispatch};
+function mapStateToProps(state) {
+	console.info(state);
+	return { searchText: state.text };
 }
 
-export default connect(mapDispatchToProps)(SearchBarLogic);
+export default connect(mapStateToProps)(SearchBarLogic);
