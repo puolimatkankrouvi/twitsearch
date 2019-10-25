@@ -13,11 +13,11 @@ class SearchBarLogic extends Component {
 			text: '',
 			sent: false
 		};
-		this.handleChange.bind(this);
-		this.sendSearch.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.sendSearch = this.sendSearch.bind(this);
 	}
 
-	handleChange(value){
+	handleChange(value) {
 		//Dispatches action for changing text
 		//The value is Proxy now
 		this.props.dispatch(changeText(value));
@@ -25,6 +25,7 @@ class SearchBarLogic extends Component {
 	
 	sendSearch(){
 		const searchText = this.props.searchText;
+		console.info(searchText);
 		if (searchText) {
 			axios.post("localhost:8000/search/", searchText)
 				.then(result => {
@@ -38,15 +39,15 @@ class SearchBarLogic extends Component {
 				<SearchBar
 					searchText={this.props.searchText}
 					handleChange={this.handleChange}
-					handleSubmit={this.sendSearch}
+					sendSearch={this.sendSearch}
 					className="Search-bar"
 				/>
 		)
 	}
 }
 
-function mapStateToProps(dispatch, ownState){
-	return {searchText: ownState.text, dispatch};
+function mapDispatchToProps(dispatch, state){
+	return {searchText: state.text, dispatch};
 }
 
-export default connect(mapStateToProps)(SearchBarLogic);
+export default connect(mapDispatchToProps)(SearchBarLogic);

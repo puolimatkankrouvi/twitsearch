@@ -3,6 +3,17 @@ import {InputText} from "primereact/inputtext"
 import {Button} from "primereact/button";
 
 class SearchBar extends Component {
+
+	constructor(props) {
+		super(props);
+
+		this.onEnterPressed = this.onEnterPressed.bind(this);
+	}
+
+	componentDidMount() {
+		addEventListener("keydown", this.onEnterPressed);
+	}
+
 	render() {
 		return(
 			<div>
@@ -13,10 +24,18 @@ class SearchBar extends Component {
 			/>
 			<Button
 				label={"Search"}
-				onClick={this.props.handleSubmit}
+				onClick={this.props.sendSearch}
 			/>
 			</div>
 		)
+	}
+
+	onEnterPressed(ev) {
+		if (ev.key.code === "13" && !ev.shiftKey) {
+			if (this.props.searchText.length > 0) {
+				this.props.sendSearch();
+			}
+		}
 	}
 }
 
