@@ -15,7 +15,6 @@ class SearchBarLogic extends Component {
 
 	handleChange(value) {
 		//Dispatches action for changing text
-		//The value is Proxy now
 		this.props.dispatch(changeText(value));
 	}
 	

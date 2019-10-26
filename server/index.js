@@ -3,7 +3,7 @@ const path = require('path');
 const OAuth2 = require('oauth').OAuth2;
 
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
@@ -80,7 +80,7 @@ function authenticate(req,res,next){
 
 };
 
-app.use(initGlobals, authenticate, search);
+app.use(initGlobals, authenticate, search, cors());
 
 app.get('/searchget', authenticate , (req, res) => {
   // url: /search?q=&23query
@@ -96,7 +96,7 @@ app.get('/searchget', authenticate , (req, res) => {
 
 app.post('/search', authenticate, (req, res) => {
   var query = req.body.searchText;
-  console.info(query);
+  res.set();
   if (query && query.length > 0) {
 	search(req,res,query, (result) => {
 		res.status = 200;
