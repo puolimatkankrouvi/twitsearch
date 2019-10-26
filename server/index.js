@@ -33,7 +33,6 @@ function search(req,res,query, next){
 
   var encodedQuery = encodeURIComponent(query);
   var url = twitter_search_url + '?q=' + encodedQuery;
-  console.log(url);
   axios.get( url , {'headers': headers}, )
 	.then( (res) => {
 	  if(res.status == 200){
@@ -96,12 +95,15 @@ app.get('/searchget', authenticate , (req, res) => {
 });
 
 app.post('/search', authenticate, (req, res) => {
-  var query = res.data();
-  var result = search(req,res,query);
-  search(req,res,query, (result) => {
-    res.set('Content-Type', 'application/json');
-    res.send(result);
-  });
+  var query = req.body.searchText;
+  console.info(query);
+  if (query && query.length > 0) {
+	search(req,res,query, (result) => {
+		res.status = 200;
+		res.set('Content-Type', 'application/json');
+		res.send(result);
+	});
+  }
 });
 
 

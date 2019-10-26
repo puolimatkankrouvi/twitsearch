@@ -6,7 +6,7 @@ import './Body.css';
 class Body extends React.PureComponent{
 	render(){
 		return <div className="Body">
-			{this.props.searchResult ? JSON.stringify(this.props.searchResult): ""}
+			{this.props.searchResult ? JSON.stringify(this.props.searchResult): null}
 		</div>
 	}
 }

@@ -22,10 +22,12 @@ class SearchBarLogic extends Component {
 	sendSearch(){
 		const searchText = this.props.searchText;
 		if (searchText) {
-			axios.post("localhost:8000/search/", searchText)
+			// TODO: CORS.
+			axios.post("http://localhost:8000/search/", {searchText: searchText})
 				.then(result => {
 					this.props.dispatch(searchToState(result));
-				});
+				},
+				error => console.info(error));
 		}
 
 		this.props.dispatch(changeText(""));
@@ -44,7 +46,6 @@ class SearchBarLogic extends Component {
 }
 
 function mapStateToProps(state) {
-	console.info(state);
 	return { searchText: state.text };
 }
 
