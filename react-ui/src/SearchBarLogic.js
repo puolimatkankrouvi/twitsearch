@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import axios from 'axios';
 
-import {changeText, searchToState} from './actions.js';
+import {changeText, searchToState, setTweetsLoading} from './actions.js';
 
 import SearchBar from './SearchBar';
 
@@ -21,12 +21,18 @@ class SearchBarLogic extends Component {
 	sendSearch(){
 		const searchText = this.props.searchText;
 		if (searchText) {
-			// TODO: CORS.
-			axios.post("http://localhost:8000/search/", {searchText: searchText})
+			this.props.dispatch(setTweetsLoading(true));			
+			const encodedText = encodeURI(searchText);
+			axios.post("http://localhost:8000/search/", {searchText: encodedText})
 				.then(result => {
-					this.props.dispatch(searchToState(result));
+					if (result.data) {
+						this.props.dispatch(searchToState(result.data));
+					}
 				},
-				error => console.info(error));
+				error => {
+					this.props.dispatch(setTweetsLoading(false));
+					console.info(error);
+				});
 		}
 
 		this.props.dispatch(changeText(""));

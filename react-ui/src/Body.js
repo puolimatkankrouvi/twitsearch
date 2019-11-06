@@ -7,10 +7,8 @@ import TweetList from "./TweetList";
 class Body extends React.PureComponent{
 	render(){
 		return <div className="Body">
-			<TweetList
-				searchResult={this.props.searchResult}
-			/>
-			{this.props.searchResult ? JSON.stringify(this.props.searchResult): null}
+			<TweetList />
+			{/*this.props.searchResult ? JSON.stringify(this.props.searchResult): null*/}
 		</div>
 	}
 }

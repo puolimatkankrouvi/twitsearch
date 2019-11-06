@@ -1,54 +1,55 @@
 import * as React from "react";
+import {connect} from "react-redux";
 import {DataView} from 'primereact/dataview';
-import "primeflex/primeflex.css";
-import "./TweetList.css";
+import {ProgressBar} from 'primereact/progressbar';
 
-export default class TweetList extends React.PureComponent {
-    constructor(props) {
-        super(props);
+import {Tweet} from "./Tweet";
 
-        this.getHeader = this.getHeader.bind(this);
-    }
-	state = {
-        tweets: this.props.searchResult && this.props.searchResult["statuses"] ? this.props.searchResult.statuses : [
-            { text: "bsakjbdksad", profileImageUrl: "dfksdhkjfsdhf", createdAt: "Mon May 06 20:01:29 +0000 2019" },
-        ],
-    };
-    render() {
-        if (!this.state) {
+function TweetList(props) {
+    const {tweets, tweetsLoading} = props;
+        if (!tweets) {
             return null;
         }
 
-        const header = this.getHeader();
-
-        return <DataView value={this.state.tweets} layout={"list"} itemTemplate={this.itemTemplate} header={header} />;
-    }
-
-    itemTemplate(tweet, layout) {
-        if (!tweet) {
-            return;
-        }
-       
-        return (
-            <div className="p-col-12">
-                <div className="tweet-details">
-                    <div>
-                        <img src={tweet.profileImageUrl || ""} alt={tweet.text}/>
-                        <div className="p-grid">
-                            <div className="p-col-12">Text: <b>{tweet.text}</b></div>
-                            <div className="p-col-12">Created at: <b>{tweet.createdAt}</b></div>
-                        </div>
-                    </div>
+        if (tweetsLoading) {
+            return <div className="p-grid">
+                <div className="p-col-4"></div>
+                <div className="p-col-4">
+                    <h3>Loading...</h3>
+                    <ProgressBar mode="indeterminate" style={{height: "6px"}} />
                 </div>
-            </div>
-        );
+                <div className="p-col-4"></div>
+            </div>;
+        }
+
+        const header = getHeader();
+        return <DataView value={props.tweets} layout={"list"} itemTemplate={itemTemplate} header={header} style={{margin: "20px 0 0 0"}}/>;
+}
+
+function itemTemplate(tweet, layout) {
+    if (!tweet) {
+        return null;
+    }
+   
+    return <Tweet tweet={tweet} />;
+}
+
+function getHeader() {
+    return <div className="p-grid">
+        <div className="p-col-6"></div>
+        <div className="p-col-6">
+        </div>
+    </div>;
+}
+
+function mapStateToProps(state) {
+    const { searchResult, tweetsLoading } = state;
+    let tweets = [];
+    if (searchResult && searchResult.statuses) {
+        tweets = searchResult.statuses;
     }
 
-    getHeader() {
-        return <div className="p-grid">
-            <div className="p-col-6"></div>
-            <div className="p-col-6">
-            </div>
-        </div>;
-    }
+    return {tweets, tweetsLoading };
 }
+
+export default connect(mapStateToProps)(TweetList);

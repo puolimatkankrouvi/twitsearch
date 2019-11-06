@@ -28,11 +28,10 @@ const appConsumerSecret = credentials.getConsumerSecret();
 const twitter_search_url = 'https://api.twitter.com/1.1/search/tweets.json';
 
 function search(req,res,query, next){
-
   var headers = {'Authorization': 'Bearer ' + res.locals.accessToken }
 
   var encodedQuery = encodeURIComponent(query);
-  var url = twitter_search_url + '?q=' + encodedQuery;
+  var url = `${twitter_search_url}?q=${encodedQuery}&count=100`;
   axios.get( url , {'headers': headers}, )
 	.then( (res) => {
 	  if(res.status == 200){
@@ -53,8 +52,6 @@ function initGlobals(req,res,next){
 	};
 	next();
 }
-
-
 
 function authenticate(req,res,next){
 	var oauth2 = new OAuth2(

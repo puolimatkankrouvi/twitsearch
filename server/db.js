@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 require("./dbConfig");
-var connection = mongoose.connect(connectionString);
+var connection = mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
 var tweetSchema = mongoose.Schema({
 	text: String,

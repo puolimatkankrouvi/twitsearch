@@ -1,14 +1,15 @@
-import {CHANGE_TEXT, SET_SEARCHRESULT} from './actions.js';
+import {CHANGE_TEXT, SET_SEARCHRESULT, TWEETSLOADING} from './actions.js';
 
-const initialState = {text: "", searchResult: null};
+const initialState = {text: "", searchResult: null, tweetsLoading: false};
 
 export function search_reducer(state=[initialState], action){
 	switch(action.type){
-		case(CHANGE_TEXT):
-			const encodedText = encodeURI(action.text);
-			return {...state, text: encodedText};
-		case(SET_SEARCHRESULT):
-			return {text: "", searchResult: action.json};
+		case (CHANGE_TEXT):
+			return { ...state, text: action.text };
+		case (SET_SEARCHRESULT):
+			return { ...state, text: "", searchResult: action.json, tweetsLoading: false};
+		case (TWEETSLOADING):
+			return {...state, tweetsLoading: action.loading};
 		default:
 			return state
 	}
