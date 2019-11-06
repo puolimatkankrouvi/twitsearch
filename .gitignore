@@ -12,5 +12,6 @@ Dockerfile
 docker-compose.yml
 
 server/credentials.js
+server/dbConfig.js
 
 tehtavananto.txt

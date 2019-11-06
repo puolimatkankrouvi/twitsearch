@@ -4,10 +4,6 @@ import './Header.css';
 import SearchBarLogic from './SearchBarLogic'
 
 class Header extends Component{
-
-
-
-
 	render(){
 		return(
 			<div className="Header">
