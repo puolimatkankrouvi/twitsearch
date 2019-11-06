@@ -1,6 +1,5 @@
 import * as React from "react";
-import {DataView, DataViewLayoutOptions} from 'primereact/dataview';
-import {Panel} from "primereact/panel";
+import {DataView} from 'primereact/dataview';
 import "primeflex/primeflex.css";
 import "./TweetList.css";
 
