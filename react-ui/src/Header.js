@@ -9,9 +9,9 @@ class Header extends Component{
 		return(
 			<div className="Header p-grid">
 				<div className="p-col-2 p-lg-4">
-					<h1 className="App-title">Twitsearch</h1>
+					<h1 className="app-title">Twitsearch</h1>
 				</div>
-				<div className="p-col-10 p-lg-4">
+				<div className="p-col-10 p-lg-4 search-bar">
 					<SearchBarLogic />
 				</div>
 				<div className="p-col-0 p-lg-4">
