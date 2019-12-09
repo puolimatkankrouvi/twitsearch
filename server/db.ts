@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-require("./dbConfig");
-let connection = mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+import mongoose from "mongoose";
+import { connectionString } from "./dbConfig";
+const connection = mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
-let tweetSchema = mongoose.Schema({
+const tweetSchema = mongoose.Schema({
 	text: String,
 	username: String,
 	screen_name: String,
@@ -10,74 +10,57 @@ let tweetSchema = mongoose.Schema({
 
 });
 
-let tweetModel = mongoose.model("TweetModel", tweetSchema);
+const TweetModel = mongoose.model("TweetModel", tweetSchema);
 
-let tweetCollectionSchema = mongoose.Schema({
-	tweets: [{type: mongoose.Schema.Types.ObjectId , ref: "tweetModel"}],
+const tweetCollectionSchema = mongoose.Schema({
+	tweets: [{type: mongoose.Schema.Types.ObjectId , ref: "TweetModel"}],
 });
 
-let tweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
+const tweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
 
-function processTweets(tweets_json) {
-	let error = false;
+interface ITweets {
+	statuses: ReadonlyArray<ITweet>;
+}
+
+interface ITweet {
+	created_at: Date;
+	text: String;
+	user: IUser;
+}
+
+interface IUser {
+	name: String;
+	screen_name: String;
+}
+
+export function saveTweets(tweetJson: ITweets): ITweets {
+	const error = false;
 
 	const tweets = new tweetCollection();
 
 	/*Tweets should be in statuses */
-	if (tweets_json.hasOwnProperty("statuses") ) {
-		tweet = new tweetModel();
-		for (i in tweets_json.statuses) {
-
-			status = tweets_json[i];
-
-			console.log(status);
-
+	if (tweetJson.hasOwnProperty("statuses") ) {
+		const tweet = new TweetModel();
+		for (const status of tweetJson.statuses) {
 			if (status.hasOwnProperty("created_at")) {
 				tweet.created_at = status.created_at;
-			} else {
-				error = true;
 			}
 
 			if (status.hasOwnProperty("text")) {
 				tweet.text = status.text;
-			} else {
-				error = true;
 			}
-
 			if (status.hasOwnProperty("user")) {
 				tweet.username = status.user.name;
 				tweet.screen_name = status.user.screen_name;
 
-			} else {
-				error = true;
 			}
 
 			tweet.save();
-
 			tweets.tweets = tweet;
-
 			tweets.save();
 
 		}
-	} else {
-		error = true;
 	}
 
-	if (error) {
-		console.log("Error processing tweets");
-	}
-
-	return tweets;
+	return tweetJson;
 }
-
-let saveTweets = function(tweets_json) {
-	processTweets(tweets_json, (tweets) => {
-		console.log("Tweets saved");
-
-		res.send(tweets.json());
-	});
-};
-
-module.exports = {
-	saveTweets
-};

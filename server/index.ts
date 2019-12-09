@@ -1,18 +1,16 @@
-const express = require("express");
-const path = require("path");
-const OAuth2 = require("oauth").OAuth2;
-
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const axios = require("axios");
+import bodyParser from "body-parser";
+import cors from "cors";
+import express, {NextFunction, Request, Response} from "express";
+import OAuth2 from "oauth";
+import path from "path";
+import * as db from "./db";
+const axios = require("axios").default;
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Credentials are secret
 const credentials = require("./credentials.js");
-
-const db = require("./db.js");
 
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, "../react-ui/build")));
@@ -24,16 +22,16 @@ app.use(bodyParser.json());
 const appConsumerKey = credentials.getConsumerKey();
 const appConsumerSecret = credentials.getConsumerSecret();
 
-const twitter_search_url = "https://api.twitter.com/1.1/search/tweets.json";
+const twitterSearchUrl = "https://api.twitter.com/1.1/search/tweets.json";
 
-function search(req, res, query, next) {
-  const headers = {Authorization: "Bearer " + res.locals.accessToken };
+function search(req: Request, res: Response, query, next) {
+  const headers = {Authorization: `Bearer ${res.locals.accessToken}` };
 
   const encodedQuery = encodeURIComponent(query);
-  const url = `${twitter_search_url}?q=${encodedQuery}&count=100`;
+  const url = `${twitterSearchUrl}?q=${encodedQuery}&count=100`;
   axios.get( url , {headers}, )
-	.then( (res) => {
-	  if (res.status == 200) {
+	.then((res) => {
+	  if (res.statusCode == 200) {
 	  	next(res.data);
 	  } else {
 	  	next({message: "Error in search"});
@@ -44,7 +42,7 @@ function search(req, res, query, next) {
     });
 }
 
-function initGlobals(req, res, next) {
+function initGlobals(req: Request, res: Response, next: NextFunction) {
 	res.locals = {
 		accessToken: undefined,
 	};
@@ -81,20 +79,20 @@ app.get("/searchget", authenticate , (req, res) => {
   // url: /search?q=&23query
   const query = req.query.q;
   search(req, res, query, (result) => {
-    res.set("Content-Type", "application/json");
-    res.send(result);
+	res.statusCode = 200;
+ res.set("Content-Type", "application/json");
     // Not working yet
-    // db.saveTweets(result);
-  });
+ db.saveTweets(result);
+	res.send(result);
+});
 
 });
 
 app.post("/search", authenticate, (req, res) => {
   const query = req.body.searchText;
-  res.set();
   if (query && query.length > 0) {
 	search(req, res, query, (result) => {
-		res.status = 200;
+		res.statusCode = 200;
 		res.set("Content-Type", "application/json");
 		res.send(result);
 	});
@@ -102,10 +100,6 @@ app.post("/search", authenticate, (req, res) => {
 });
 
 // All remaining requests return the React app, so it can handle routing.
-app.get("*", function(request, response) {
-  response.sendFile(path.resolve(__dirname, "../react-ui/build", "index.html"));
-});
+app.get("*", (request, response) => response.sendFile(path.resolve(__dirname, "../react-ui/build", "index.html")));
 
-app.listen(PORT, function() {
-  console.log(`Listening on port ${PORT}`);
-});
+app.listen(PORT);
