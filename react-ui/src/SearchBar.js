@@ -4,8 +4,7 @@ import {Button} from "primereact/button";
 
 class SearchBar extends Component {
 	constructor(props) {
-		super(props);
-
+		super();
 		this.onEnterPressed = this.onEnterPressed.bind(this);
 	}
 

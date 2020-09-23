@@ -4,16 +4,14 @@ import './Body.css';
 import TweetList from "./TweetList";
 
 
-class Body extends React.PureComponent{
-	render(){
-		return <body>
-			<TweetList />
-		</body>
-	}
-}
+const body = () => {
+	return <body>
+		<TweetList />
+	</body>
+};
 
 function mapStateToProps(state) {
 	return {searchResult: state.searchResult};
 }
 
-export default connect(mapStateToProps)(Body);
+export default connect(mapStateToProps)(body);
