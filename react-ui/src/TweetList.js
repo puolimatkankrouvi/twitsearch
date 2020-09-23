@@ -6,7 +6,7 @@ import {ProgressBar} from 'primereact/progressbar';
 import {Tweet} from "./Tweet";
 
 function TweetList(props) {
-    const {tweets, tweetsLoading} = props;
+    const { tweets, tweetsLoading, tweetLoadProgress} = props;
         if (!tweets) {
             return null;
         }
@@ -15,8 +15,7 @@ function TweetList(props) {
             return <div className="p-grid">
                 <div className="p-col-4"></div>
                 <div className="p-col-4">
-                    <h3>Loading...</h3>
-                    <ProgressBar mode="indeterminate" style={{height: "6px"}} />
+                    <ProgressBar value={tweetLoadProgress} showValue={true} />
                 </div>
                 <div className="p-col-4"></div>
             </div>;
@@ -43,13 +42,13 @@ function getHeader() {
 }
 
 function mapStateToProps(state) {
-    const { searchResult, tweetsLoading } = state;
+    const { searchResult, tweetsLoading, tweetLoadProgress } = state;
     let tweets = [];
     if (searchResult && searchResult.statuses) {
         tweets = searchResult.statuses;
     }
 
-    return {tweets, tweetsLoading };
+    return {tweets, tweetsLoading, tweetLoadProgress };
 }
 
 export default connect(mapStateToProps)(TweetList);

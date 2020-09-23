@@ -17,3 +17,7 @@
 .search-bar {
   margin: 8px 0 0 0;
 }
+
+.ui-progressbar .ui-progressbar-value {
+  height: 0! important;
+}

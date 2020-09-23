@@ -2,20 +2,28 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import axios from 'axios';
 
-import {changeText, searchToState, setTweetsLoading} from './actions.js';
+import {changeText, searchToState, setTweetLoadProgress, setTweetsLoading} from './redux/actions.js';
 
 import SearchBar from './SearchBar';
+
+const searchUrl = `http://localhost:8000/search/`;
 
 class SearchBarLogic extends Component {
 	constructor(props){
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
 		this.sendSearch = this.sendSearch.bind(this);
+		this.updateProgressBar = this.updateProgressBar.bind(this);
 	}
 
 	handleChange(value) {
 		//Dispatches action for changing text
 		this.props.dispatch(changeText(value));
+	}
+
+	updateProgressBar(progressEvent) {		
+		const percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+		this.props.dispatch(setTweetLoadProgress(percentCompleted));
 	}
 	
 	sendSearch(){
@@ -23,7 +31,12 @@ class SearchBarLogic extends Component {
 		if (searchText) {
 			this.props.dispatch(setTweetsLoading(true));			
 			const encodedText = encodeURI(searchText);
-			axios.post("http://localhost:8000/search/", {searchText: encodedText})
+			
+			const config = {
+				onUploadProgress: this.updateProgressBar
+			}
+
+			axios.post(searchUrl, {searchText: encodedText}, config)
 				.then(result => {
 					if (result.data) {
 						this.props.dispatch(searchToState(result.data));
@@ -37,7 +50,6 @@ class SearchBarLogic extends Component {
 
 		this.props.dispatch(changeText(""));
 	}
-	
 	render(){
 		return(
 				<SearchBar

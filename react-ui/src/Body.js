@@ -8,7 +8,6 @@ class Body extends React.PureComponent{
 	render(){
 		return <body>
 			<TweetList />
-			{/*this.props.searchResult ? JSON.stringify(this.props.searchResult): null*/}
 		</body>
 	}
 }
