@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {InputText} from "primereact/inputtext"
+import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 
 class SearchBar extends Component {
-	constructor(props) {
+	constructor() {
 		super();
 		this.onEnterPressed = this.onEnterPressed.bind(this);
 	}

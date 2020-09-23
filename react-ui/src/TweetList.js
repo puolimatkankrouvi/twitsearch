@@ -1,28 +1,28 @@
 import * as React from "react";
 import {connect} from "react-redux";
 import {DataView} from 'primereact/dataview';
-import {ProgressBar} from 'primereact/progressbar';
+import TweetLoadingIndicator from "./TweetListLoadingIndicator";
+import ErrorMessage from "./ErrorMessage";
 
 import {Tweet} from "./Tweet";
 
 function TweetList(props) {
-    const { tweets, tweetsLoading, tweetLoadProgress} = props;
-        if (!tweets) {
-            return null;
-        }
+    const { tweets, tweetsLoading } = props;
 
-        if (tweetsLoading) {
-            return <div className="p-grid">
-                <div className="p-col-4"></div>
-                <div className="p-col-4">
-                    <ProgressBar value={tweetLoadProgress} showValue={true} />
-                </div>
-                <div className="p-col-4"></div>
-            </div>;
-        }
+    if (!tweets) {
+        return null;
+    }
 
-        const header = getHeader();
-        return <DataView value={props.tweets} layout={"list"} itemTemplate={itemTemplate} header={header} style={{margin: "20px 0 0 0"}}/>;
+    if (tweetsLoading) {
+        return (
+            <TweetLoadingIndicator />
+        );
+    }
+
+    return <div>
+        <DataView value={props.tweets} layout={"list"} itemTemplate={itemTemplate} header={getHeader()} style={{margin: "20px 0 0 0"}}/>
+        {props.errorMessage ? <ErrorMessage errorMessage={props.errorMessage} /> : null}
+    </div>;
 }
 
 function itemTemplate(tweet, layout) {
@@ -35,20 +35,19 @@ function itemTemplate(tweet, layout) {
 
 function getHeader() {
     return <div className="p-grid">
-        <div className="p-col-6"></div>
-        <div className="p-col-6">
-        </div>
+        <div className="p-col-6" />
+        <div className="p-col-6" />
     </div>;
 }
 
 function mapStateToProps(state) {
-    const { searchResult, tweetsLoading, tweetLoadProgress } = state;
+    const { searchResult, tweetsLoading, errorMessage } = state;
     let tweets = [];
     if (searchResult && searchResult.statuses) {
         tweets = searchResult.statuses;
     }
 
-    return {tweets, tweetsLoading, tweetLoadProgress };
+    return {tweets, tweetsLoading, errorMessage };
 }
 
 export default connect(mapStateToProps)(TweetList);

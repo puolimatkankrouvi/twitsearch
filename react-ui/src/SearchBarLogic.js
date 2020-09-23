@@ -1,55 +1,54 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {connect} from "react-redux";
 import axios from 'axios';
 
-import {changeText, searchToState, setTweetLoadProgress, setTweetsLoading} from './redux/actions.js';
+import {changeText, searchToState, setErrorMessage, setTweetLoadProgress, setTweetsLoading} from './redux/actions.js';
 
 import SearchBar from './SearchBar';
 
 const searchUrl = `http://localhost:8000/search/`;
 
-class SearchBarLogic extends Component {
-	constructor() {
-		super();
-		this.sendSearch = this.sendSearch.bind(this);	
-	}
-
-	sendSearch(){
-		const searchText = this.props.searchText;
-		
+const searchBarLogic = (props) => {
+	const sendSearch = React.useCallback(() => {
+		const searchText = props.searchText;
 		if (searchText) {
-			this.props.setTweetsLoading(true);		
+			props.setTweetsLoading(true);		
 			const encodedText = encodeURI(searchText);
 			
 			const config = {
-				onUploadProgress: this.props.setTweetLoadProgress
+				onUploadProgress: function(progressEvent) {
+					const percentage = calculatePercentageCompleted(progressEvent);
+					props.setTweetLoadProgress(percentage);
+				}
 			}
 
 			axios.post(searchUrl, {searchText: encodedText}, config)
 				.then(result => {
 					if (result.data) {
-						this.props.setSearchToState(result.data);
+						props.setSearchToState(result.data);
 					}
 				},
 				error => {
-					this.props.setTweetsLoading(false);
+					const errorMessage = typeof error === "string" ? error : error.message;
+					props.setErrorMessage(errorMessage);
+					props.setTweetsLoading(false);
 				});
 		}
 
-		this.props.setSearchText("");
-	}
+		props.setSearchText("");
+	},
+		[props.searchText]
+	);
 
-	render(){
-		return(
-				<SearchBar
-					searchText={this.props.searchText}
-					handleChange={this.props.setSearchText}
-					sendSearch={this.sendSearch}
-					className="Search-bar"
-				/>
-		)
-	}
-}
+	return(
+		<SearchBar
+			searchText={props.searchText}
+			handleChange={props.setSearchText}
+			sendSearch={sendSearch}
+			className="Search-bar"
+		/>
+	);
+};
 
 function mapStateToProps(state) {
 	return { searchText: state.text };
@@ -65,8 +64,8 @@ function calculatePercentageCompleted(progressEvent) {
 
 function dispatchToProps(dispatch) {
 	return {
-		setTweetLoadProgress: progressEvent => {					
-			dispatch(setTweetLoadProgress(calculatePercentageCompleted(progressEvent)));
+		setTweetLoadProgress: percentage => {			
+			dispatch(setTweetLoadProgress(percentage));
 		},
 		setTweetsLoading: tweetsLoading => {
 			dispatch(setTweetsLoading(tweetsLoading));
@@ -77,7 +76,10 @@ function dispatchToProps(dispatch) {
 		setSearchText: value => {
 			dispatch(changeText(value));
 		},
+		setErrorMessage: errorMessage => {
+			dispatch(setErrorMessage(errorMessage));
+		},
 	};
 }
 
-export default connect(mapStateToProps, dispatchToProps)(SearchBarLogic);
+export default connect(mapStateToProps, dispatchToProps)(searchBarLogic);

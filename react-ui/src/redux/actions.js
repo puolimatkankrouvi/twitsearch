@@ -3,6 +3,7 @@ export const CHANGE_TEXT = 'CHANGE_TEXT';
 export const SET_SEARCHRESULT = 'SET_SEARCHRESULT';
 export const TWEETSLOADING = 'TWEETSLOADING';
 export const TWEETLOADPROGRESS = "TWEETLOADPROGRESS";
+export const ERRORMESSAGE = "ERRORMESSAGE";
 
 /*Action creators*/
 export function changeText(text){
@@ -30,5 +31,12 @@ export function setTweetLoadProgress(progress) {
 	return {
 		type: TWEETLOADPROGRESS,
 		progress,
+	};
+}
+
+export function setErrorMessage(errorMessage) {
+	return {
+		type: ERRORMESSAGE,
+		errorMessage,
 	};
 }
