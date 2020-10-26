@@ -37,8 +37,9 @@ export function saveTweets(tweetJson: ITweets): ITweets {
 
     /*Tweets are in statuses. */
     if (tweetJson.hasOwnProperty("statuses") ) {
-        const tweet = new TweetModel();
         for (const status of tweetJson.statuses) {
+            const tweet = new TweetModel();
+
             if (status.hasOwnProperty("created_at")) {
                 tweet.created_at = status.created_at;
             }
@@ -52,9 +53,10 @@ export function saveTweets(tweetJson: ITweets): ITweets {
             }
 
             tweet.save();
-            tweets.tweets = tweet;
-            tweets.save();
+            tweets.tweets.push(tweet);
         }
+        
+        tweets.save();
     }
 
     return tweetJson;
