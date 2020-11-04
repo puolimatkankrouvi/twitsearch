@@ -9,7 +9,7 @@
     "axios": "^0.19.0",
     "classnames": "^2.2.5",
     "marked": "^0.3.9",
-    "primeflex": "^1.0.0",
+    "primeflex": "^2.0.0",
     "primeicons": "^2.0.0",
     "primereact": "^3.3.2",
     "prop-types": "^15.6.0",
