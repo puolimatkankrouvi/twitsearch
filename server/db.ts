@@ -55,7 +55,7 @@ export function saveTweets(tweetJson: ITweets): ITweets {
             tweet.save();
             tweets.tweets.push(tweet);
         }
-        
+
         tweets.save();
     }
 
