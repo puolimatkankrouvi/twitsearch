@@ -7,7 +7,7 @@ WORKDIR /usr/src/twitsearch/server
 COPY package*.json ./
 
 # Run command npm install (/bin/sh -c)
-RUN npm install
+RUN npm install --silent
 
 # Copy rest of the files
 COPY . .
