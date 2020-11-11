@@ -13,11 +13,15 @@ const TweetModel = mongoose.model("TweetModel", tweetSchema);
 
 const tweetCollectionSchema = mongoose.Schema({
     tweets: [{type: mongoose.Schema.Types.ObjectId , ref: "TweetModel"}],
+    date: Date,
+    name: String,
 });
 
 const tweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
 
-interface ITweets {
+export interface ITweets {
+    date: Date;
+    name: string | null;
     statuses: ReadonlyArray<ITweet>;
 }
 
@@ -34,6 +38,8 @@ interface IUser {
 
 export function saveTweets(tweetJson: ITweets): ITweets {
     const tweets = new tweetCollection();
+    tweets.date = tweetJson.date;
+    tweets.name = tweets.name;
 
     /*Tweets are in statuses. */
     if (tweetJson.hasOwnProperty("statuses") ) {
@@ -55,9 +61,9 @@ export function saveTweets(tweetJson: ITweets): ITweets {
             tweet.save();
             tweets.tweets.push(tweet);
         }
-
-        tweets.save();
     }
+    
+    tweets.save();
 
     return tweetJson;
 }

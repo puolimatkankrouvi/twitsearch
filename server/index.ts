@@ -58,13 +58,12 @@ function search(req: Request, res: Response, query: string, next) {
 
 app.use(cors());
 
-app.get("/searchget", (req, res) => {
+app.get("/search", (req, res) => {
   // url: /search?q=&23query
     const query = req.query.q;
     search(req, res, query, (result) => {
         res.statusCode = 200;
         res.set("Content-Type", "application/json");
-        // db.saveTweets(result);
         res.send(result);
     });
 });
@@ -78,6 +77,16 @@ app.post("/search", (req, res) => {
             res.send(result);
         });
     }
+});
+
+app.put("/save", (req, res) => {
+    const tweets: db.ITweets = req.body.tweets;
+    if (tweets) {
+        db.saveTweets(tweets);
+    }
+    
+    res.statusCode = 200;
+    res.send();
 });
 
 // All remaining requests return the React app, so it can handle routing.
