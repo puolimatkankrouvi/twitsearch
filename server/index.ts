@@ -14,8 +14,8 @@ const PORT = process.env.PORT || 8000;
 app.use(express.static(path.resolve(__dirname, "../react-ui/build")));
 
 // Body parser
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false, limit: "1000mb"}));
+app.use(bodyParser.json({limit: "1000mb"}));
 
 const appConsumerKey = credentials.getConsumerKey();
 const appConsumerSecret = credentials.getConsumerSecret();
@@ -79,12 +79,12 @@ app.post("/search", (req, res) => {
     }
 });
 
-app.put("/save", (req, res) => {
+app.put("/save", cors(), (req, res) => {
     const tweets: db.ITweets = req.body.tweets;
     if (tweets) {
         db.saveTweets(tweets);
     }
-    
+
     res.statusCode = 200;
     res.send();
 });

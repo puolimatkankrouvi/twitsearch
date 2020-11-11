@@ -1,4 +1,3 @@
-import errorMessage from '../ErrorMessage.js';
 import {CHANGE_TEXT, SET_SEARCHRESULT, TWEETLOADPROGRESS, TWEETSLOADING, ERRORMESSAGE} from './actions.js';
 
 const initialState = {

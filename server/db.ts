@@ -20,13 +20,13 @@ const tweetCollectionSchema = mongoose.Schema({
 const tweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
 
 export interface ITweets {
-    date: Date;
-    name: string | null;
+    date: string;
+    name: string;
     statuses: ReadonlyArray<ITweet>;
 }
 
 interface ITweet {
-    created_at: Date;
+    created_at: string;
     text: string;
     user: IUser;
 }
@@ -62,7 +62,7 @@ export function saveTweets(tweetJson: ITweets): ITweets {
             tweets.tweets.push(tweet);
         }
     }
-    
+
     tweets.save();
 
     return tweetJson;
