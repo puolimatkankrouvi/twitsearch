@@ -14,7 +14,7 @@ export function search_reducer(state=[initialState], action){
 		case (CHANGE_TEXT):
 			return {...state, text: action.text };
 		case (SET_SEARCHRESULT):
-			return { ...state, text: "", searchResult: action.json, tweetsLoading: false, errorMessage: null};
+			return { ...state, searchResult: action.json, errorMessage: null};
 		case (TWEETSLOADING):
 			return {...state, tweetsLoading: action.loading };
 		case (TWEETLOADPROGRESS):

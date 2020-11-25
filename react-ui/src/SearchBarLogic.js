@@ -1,19 +1,15 @@
 import React from 'react';
 import {connect} from "react-redux";
-import axios from 'axios';
-
+import { search } from "./apiCalls";
 import {changeText, searchToState, setErrorMessage, setTweetLoadProgress, setTweetsLoading} from './redux/actions.js';
 
 import SearchBar from './SearchBar';
 
-const searchUrl = `http://localhost:8000/search/`;
-
 const searchBarLogic = (props) => {
 	const sendSearch = React.useCallback(() => {
-		const searchText = props.searchText;
-		if (searchText) {
-			props.setTweetsLoading(true);		
-			const encodedText = encodeURI(searchText);
+		if (props.searchText) {
+			props.setTweetsLoading(true);
+			props.setSearchToState(null);
 			
 			const config = {
 				onUploadProgress: function(progressEvent) {
@@ -22,20 +18,18 @@ const searchBarLogic = (props) => {
 				}
 			}
 
-			axios.post(searchUrl, {searchText: encodedText}, config)
-				.then(result => {
-					if (result.data) {
-						props.setSearchToState(result.data);
-					}
-				},
-				error => {
-					const errorMessage = typeof error === "string" ? error : error.message;
-					props.setErrorMessage(errorMessage);
-					props.setTweetsLoading(false);
-				});
-		}
+			const successCallback = (json) => {
+				props.setSearchToState(json);
+				props.setTweetsLoading(false);
+			};
 
-		props.setSearchText("");
+			const errorCallback = (errorMessage) => {
+				props.setErrorMessage(errorMessage);
+				props.setTweetsLoading(false);
+			};
+
+			search(props.searchText, config, successCallback, errorCallback);
+		}
 	},
 		[props.searchText]
 	);

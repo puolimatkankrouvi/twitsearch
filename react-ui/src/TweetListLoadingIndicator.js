@@ -7,7 +7,7 @@ const tweetLoadingIndicator = (props) => {
         <div className="p-grid" style={{padding: "50px 0 0 0"}}>
             <div className="p-col-4" />
             <div className="p-col-4">
-                <ProgressBar value={props.tweetLoadProgress} />
+                <ProgressBar mode="indeterminate" />
             </div>
             <div className="p-col-4" />
         </div>

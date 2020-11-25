@@ -3,20 +3,19 @@ import {connect} from "react-redux";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import {setSaveSearchDialogOpen} from "./redux/actions";
-
-import Axios from 'axios';
+import { setSaveSearchDialogOpen } from "./redux/actions";
+import { save } from "./apiCalls";
 
 const saveSearchDialog = (props) => { 
-    const [searchName, setSearchName] = React.useState(props.text);
+    const [searchName, setSearchName] = React.useState(props.text || "");
     
     const saveSearch = React.useCallback(() => {
-        sendSearch(props.searchResult, searchName);
-        props.setSaveSearchDialogOpen(false);
+        const errorCallback = (errorMessage) => console.info(errorMessage);
+        save(props.searchResult, searchName, errorCallback);
+        props.closeDialog();
     },
         [props.searchResult, searchName]
     );
-
 
     const footer = <div>
             <Button
@@ -40,6 +39,7 @@ const saveSearchDialog = (props) => {
                 onHide={props.closeDialog}
             >
                 <InputText
+                    label="Name"
                     value={searchName}
                     onChange={ev => setSearchName(ev.target.value)}
                 />
@@ -47,16 +47,6 @@ const saveSearchDialog = (props) => {
         </div>
     );
 };
-
-function sendSearch(searchResult, text) {
-    const body = {
-        tweets: searchResult,
-        name: text,
-        date: new Date(),
-    };
-
-    Axios.put(`http://localhost:8000/save/`, JSON.stringify(body));
-}
 
 const mapStateToProps = (state) => {
     return {
