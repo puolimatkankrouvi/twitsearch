@@ -11,7 +11,7 @@ import 'primeicons/primeicons.css';
 const body = (props) => {
 	return <body>       
 		<TweetList />
-        <SaveSearchDialog />
+		{props.searchResult ? <SaveSearchDialog /> : null}
 	</body>
 };
 

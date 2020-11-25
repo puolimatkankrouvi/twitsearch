@@ -5,44 +5,54 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { setSaveSearchDialogOpen } from "./redux/actions";
 import { save } from "./apiCalls";
+import SimpleReactValidator from "simple-react-validator";
 
-const saveSearchDialog = (props) => { 
+const saveSearchDialog = (props) => {
     const [searchName, setSearchName] = React.useState(props.text || "");
-    
+
+    const validator = React.useRef(new SimpleReactValidator());
+
     const saveSearch = React.useCallback(() => {
-        const errorCallback = (errorMessage) => console.info(errorMessage);
-        save(props.searchResult, searchName, errorCallback);
-        props.closeDialog();
+        if (validator.current.allValid()) {
+            const errorCallback = (errorMessage) => console.info(errorMessage);
+            save(props.searchResult, searchName, errorCallback);
+            props.closeDialog();
+        }
     },
         [props.searchResult, searchName]
     );
 
     const footer = <div>
-            <Button
-                label="Save"              
-                onClick={ev => saveSearch()}
-            />
-            <Button
-                label="Cancel"
-                onClick={props.closeDialog}
-                className='p-button-secondary'
-            />
-        </div>;
+        <Button
+            label="Save"
+            onClick={ev => saveSearch()}
+        />
+        <Button
+            label="Cancel"
+            onClick={props.closeDialog}
+            className='p-button-secondary'
+        />
+    </div>;
 
     return (
         <div>
             <Dialog
                 header="Save current search"
-                width="200px"
+                width="600px"
                 footer={footer}
                 visible={props.open}
                 onHide={props.closeDialog}
             >
-                <InputText
-                    label="Name"
-                    value={searchName}
-                    onChange={ev => setSearchName(ev.target.value)}
-                />
+                <div className="p-field" style={{ height: "50px", width: "500px" }}>
+                    <label htmlFor="searchname" className="p-d-block">Search name</label>
+                        <InputText
+                            id="searchname"
+                            value={searchName}
+                            onChange={ev => setSearchName(ev.target.value)}
+                            onBlur={validator.current.showMessageFor("searchName")}
+                        />
+                        <small className="p-d-block">{validator.current.message("searchName", searchName, "required")}</small>
+                </div>
             </Dialog>
         </div>
     );
