@@ -4,26 +4,10 @@ import './Header.css';
 import { Button } from "primereact/button";
 import "primeflex/primeflex.css";
 
-import SearchBarLogic from './SearchBarLogic'
-import Axios from 'axios';
+import SearchBarLogic from './SearchBarLogic';
+import { setSaveSearchDialogOpen } from './redux/actions';
 
-class Header extends Component {  
-
-    constructor() {
-        super();
-        this.saveSearch.bind = this.saveSearch.bind(this);
-    }
-
-    saveSearch(searchResult) {
-        const body = {
-            tweets: searchResult,
-            name: this.props.text,
-            date: new Date(),
-        };
-
-        Axios.put(`http://localhost:8000/save/`, JSON.stringify(body));
-    }
-
+class Header extends Component {
 	render(){
 		return(
 			<div className="Header p-grid">
@@ -35,9 +19,9 @@ class Header extends Component {
 				</div>
 				<div className="p-col-0 p-lg-4">
                     <Button
-                        label="Save search"
+                        label="Save search..."
                         disabled={!this.props.searchResult}
-                        onClick={ev => this.saveSearch(this.props.searchResult)}
+                        onClick={ev => this.props.setSaveSearchDialogOpen(true)}
                     />
 				</div>
 			</div>
@@ -53,4 +37,9 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(Header);
+
+const dispatchToProps = {
+    setSaveSearchDialogOpen,
+}
+
+export default connect(mapStateToProps, dispatchToProps)(Header);

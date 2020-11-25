@@ -4,6 +4,7 @@ export const SET_SEARCHRESULT = 'SET_SEARCHRESULT';
 export const TWEETSLOADING = 'TWEETSLOADING';
 export const TWEETLOADPROGRESS = "TWEETLOADPROGRESS";
 export const ERRORMESSAGE = "ERRORMESSAGE";
+export const SET_SAVESEARCHDIALOG_OPEN = "SET_SAVESEARCHDIALOG_OPEN";
 
 /*Action creators*/
 export function changeText(text){
@@ -39,4 +40,11 @@ export function setErrorMessage(errorMessage) {
 		type: ERRORMESSAGE,
 		errorMessage,
 	};
+}
+
+export function setSaveSearchDialogOpen(open) {
+    return {
+        type: SET_SAVESEARCHDIALOG_OPEN,
+        open,
+    }
 }
