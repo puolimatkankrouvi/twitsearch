@@ -61,28 +61,35 @@ app.use(cors());
 app.get("/search", (req, res) => {
   // url: /search?q=&23query
     const query = req.query.q as string;
-    search(req, res, query, (result) => {
-        res.statusCode = 200;
-        res.set("Content-Type", "application/json");
-        res.send(result);
-    });
+    search(req, res, query,
+        (result) => {
+            res.statusCode = 200;
+            res.set("Content-Type", "application/json");
+            res.send(result);
+        }
+    );
 });
 
 app.post("/search", (req, res) => {
     const query = req.body.searchText;
     if (query && query.length > 0) {
-        search(req, res, query, (result) => {
-            res.statusCode = 200;
-            res.set("Content-Type", "application/json");
-            res.send(result);
-        });
+        search(req, res, query,
+            (result) => {
+                res.statusCode = 200;
+                res.set("Content-Type", "application/json");
+                res.send(result);
+            }
+        );
     }
 });
 
 app.put("/save", cors(), (req, res) => {
     const tweets: db.ITweets = req.body.tweets;
     if (tweets) {
-        db.saveTweets(tweets);
+        db.saveTweets(tweets, (error: Error | string) => {
+            res.statusCode = 500;
+            res.send(typeof error === "string" ? error : error.message);
+        });
     }
 
     res.statusCode = 200;

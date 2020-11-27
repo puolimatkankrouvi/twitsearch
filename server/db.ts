@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { connectionString } from "./dbConfig";
-mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const tweetSchema = mongoose.Schema({
+const tweetSchema = new mongoose.Schema({
     text: String,
     username: String,
     screen_name: String,
@@ -11,13 +10,13 @@ const tweetSchema = mongoose.Schema({
 
 const TweetModel = mongoose.model("TweetModel", tweetSchema);
 
-const tweetCollectionSchema = mongoose.Schema({
+const tweetCollectionSchema = new mongoose.Schema({
     tweets: [{type: mongoose.Schema.Types.ObjectId , ref: "TweetModel"}],
     date: Date,
     name: String,
 });
 
-const tweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
+const TweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
 
 export interface ITweets {
     date: string;
@@ -36,34 +35,37 @@ interface IUser {
     screen_name: string;
 }
 
-export function saveTweets(tweetJson: ITweets): ITweets {
-    const tweets = new tweetCollection();
-    tweets.date = tweetJson.date;
-    tweets.name = tweets.name;
+export function saveTweets(tweetJson: ITweets, next) {
+    mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
+        next(error);
+    });
 
-    /*Tweets are in statuses. */
-    if (tweetJson.hasOwnProperty("statuses") ) {
-        for (const status of tweetJson.statuses) {
-            const tweet = new TweetModel();
+    const tweets = [];
 
-            if (status.hasOwnProperty("created_at")) {
-                tweet.created_at = status.created_at;
-            }
+    for (const status of tweetJson.statuses) {
+        const tweet = new TweetModel({
+            created_at: status.created_at,
+            text: status.text,
+            username: status.user.name,
+            screen_name: status.user.screen_name,
+        });
 
-            if (status.hasOwnProperty("text")) {
-                tweet.text = status.text;
-            }
-            if (status.hasOwnProperty("user")) {
-                tweet.username = status.user.name;
-                tweet.screen_name = status.user.screen_name;
-            }
-
-            tweet.save();
-            tweets.tweets.push(tweet);
-        }
+        tweets.push(tweet);
     }
 
-    tweets.save();
-
-    return tweetJson;
+    const tweetCollection = new TweetCollection({
+        date: tweetJson.date,
+        name: tweetJson.name,
+        tweets,
+    });
+    tweetCollection.save().then(
+        result => {
+            next(tweetJson);
+        }
+    )
+    .catch(
+        err => {
+            next(err);
+        }
+    );
 }
