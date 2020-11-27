@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { Growl } from "primereact/growl";
+import { Toast } from "primereact/toast";
 import { setSaveSearchDialogOpen } from "./redux/actions";
 import { save } from "./apiCalls";
 import SimpleReactValidator from "simple-react-validator";
@@ -70,7 +70,7 @@ const saveSearchDialog = (props) => {
                         <small className="p-d-block">{validator.current.message("searchName", searchName, "required")}</small>
                 </div>
             </Dialog>
-            <Growl ref={toast} />
+            <Toast ref={toast} />
         </div>
     );
 };

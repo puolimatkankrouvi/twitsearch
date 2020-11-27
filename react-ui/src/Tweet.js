@@ -14,7 +14,6 @@ export function Tweet(props) {
                     <div>{parseTwitterDate(tweet.created_at)}</div>
                 </div>
             </div>
-            <hr style={{color: "#d9dad9"}}/>
         </div>
     );
 }
