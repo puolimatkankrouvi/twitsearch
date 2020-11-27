@@ -83,13 +83,15 @@ app.post("/search", (req, res) => {
     }
 });
 
-app.put("/save", cors(), (req, res) => {
+app.put("/save", cors(), async (req, res) => {
     const tweets: db.ITweets = req.body.tweets;
-    if (tweets) {
-        db.saveTweets(tweets, (error: Error | string) => {
-            res.statusCode = 500;
-            res.send(typeof error === "string" ? error : error.message);
-        });
+
+    try {
+        await db.saveTweets(tweets);
+    }
+    catch(error) {
+        res.statusCode = 500;
+        res.send(typeof error === "string" ? error : error.message);
     }
 
     res.statusCode = 200;
