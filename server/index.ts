@@ -60,7 +60,7 @@ app.use(cors());
 
 app.get("/search", (req, res) => {
   // url: /search?q=&23query
-    const query = req.query.q;
+    const query = req.query.q as string;
     search(req, res, query, (result) => {
         res.statusCode = 200;
         res.set("Content-Type", "application/json");

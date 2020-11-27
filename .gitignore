@@ -14,3 +14,5 @@ server/dbConfig.ts
 server/build
 
 tehtavananto.txt
+
+.eslintcache
