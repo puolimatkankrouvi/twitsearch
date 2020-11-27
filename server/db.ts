@@ -36,31 +36,26 @@ interface IUser {
 }
 
 export async function saveTweets(tweetJson: ITweets) {
-    try {
-        await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
-        const tweets = [];
+    const tweets = [];
 
-        for (const status of tweetJson.statuses) {
-            const tweet = new TweetModel({
-                created_at: status.created_at,
-                text: status.text,
-                username: status.user.name,
-                screen_name: status.user.screen_name,
-            });
-
-            tweets.push(tweet);
-        }
-
-        const tweetCollection = new TweetCollection({
-            date: tweetJson.date,
-            name: tweetJson.name,
-            tweets,
+    for (const status of tweetJson.statuses) {
+        const tweet = new TweetModel({
+            created_at: status.created_at,
+            text: status.text,
+            username: status.user.name,
+            screen_name: status.user.screen_name,
         });
 
-        await tweetCollection.save();
+        tweets.push(tweet);
     }
-    catch (error) {
-        return error;
-    }
+
+    const tweetCollection = new TweetCollection({
+        date: tweetJson.date,
+        name: tweetJson.name,
+        tweets,
+    });
+
+    return await tweetCollection.save();
 }

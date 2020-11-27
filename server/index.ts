@@ -83,19 +83,17 @@ app.post("/search", (req, res) => {
     }
 });
 
-app.put("/save", cors(), async (req, res) => {
+app.put("/save", cors(), async (req, res, next) => {
     const tweets: db.ITweets = req.body.tweets;
 
     try {
-        await db.saveTweets(tweets);
+        const result = await db.saveTweets(tweets);
+        res.statusCode = 200;
+        res.send(result);
     }
     catch(error) {
-        res.statusCode = 500;
-        res.send(typeof error === "string" ? error : error.message);
+        next(error);
     }
-
-    res.statusCode = 200;
-    res.send();
 });
 
 // All remaining requests return the React app, so it can handle routing.
