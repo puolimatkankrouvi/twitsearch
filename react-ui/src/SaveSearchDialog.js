@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { Growl } from "primereact/growl";
 import { setSaveSearchDialogOpen } from "./redux/actions";
 import { save } from "./apiCalls";
 import SimpleReactValidator from "simple-react-validator";
@@ -11,11 +12,26 @@ const saveSearchDialog = (props) => {
     const [searchName, setSearchName] = React.useState(props.text || "");
 
     const validator = React.useRef(new SimpleReactValidator());
+    const toast = React.useRef(null);
 
     const saveSearch = React.useCallback(() => {
         if (validator.current.allValid()) {
-            const errorCallback = (errorMessage) => console.info(errorMessage);
-            save(props.searchResult, searchName, errorCallback);
+            save(props.searchResult, searchName)
+                .then(
+                    result => {
+                        toast.current.show({
+                            severity: "success",
+                            summary: "Tweets saved",
+                        });
+                    },
+                    error => {
+                        toast.current.show({
+                            severity: "error",
+                            summary: "Error when saving tweets",
+                        });
+                    }
+            );
+
             props.closeDialog();
         }
     },
@@ -54,6 +70,7 @@ const saveSearchDialog = (props) => {
                         <small className="p-d-block">{validator.current.message("searchName", searchName, "required")}</small>
                 </div>
             </Dialog>
+            <Growl ref={toast} />
         </div>
     );
 };

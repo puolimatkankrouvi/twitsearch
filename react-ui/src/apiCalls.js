@@ -25,19 +25,12 @@ export function search(searchText, config, successCallback, errorCallback) {
 		);
 }
 
-export function save(searchResult, name, errorCallback) {
+export function save(searchResult, name) {
 	const body = {
 		tweets: searchResult,
 		name,
 		date: new Date(),
 	};
 
-	Axios.put(saveUrl, JSON.stringify(body))
-		.then(
-			() => {},
-			error => {
-				const errorMessage = typeof error === "string" ? error : error.message;
-				errorCallback(errorMessage);
-            }
-		);
+	return Axios.put(saveUrl, JSON.stringify(body));
 }

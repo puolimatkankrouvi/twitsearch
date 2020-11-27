@@ -2,7 +2,6 @@ import * as React from "react";
 
 export function Tweet(props) {
     const tweet = props.tweet;
-    console.info(tweet);
     return (
         <div className="p-col-12">
             <div className="p-grid">
