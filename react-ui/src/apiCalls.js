@@ -27,10 +27,10 @@ export function search(searchText, config, successCallback, errorCallback) {
 
 export function save(searchResult, name) {
 	const body = {
-		tweets: searchResult,
 		name,
 		date: new Date(),
+		statuses: searchResult.statuses,
 	};
 
-	return Axios.put(saveUrl, JSON.stringify(body));
+	return Axios.put(saveUrl, body);
 }

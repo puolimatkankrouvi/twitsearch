@@ -4,8 +4,9 @@ import cors from "cors";
 import express, {Request, Response } from "express";
 import oauth from "oauth";
 import path from "path";
-import { credentials } from "./credentials";
+import { ICredentials, getCredentials } from "./credentials";
 import * as db from "./db";
+import { ITweets } from "./db";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -17,19 +18,22 @@ app.use(express.static(path.resolve(__dirname, "../react-ui/build")));
 app.use(bodyParser.urlencoded({extended: false, limit: "1000mb"}));
 app.use(bodyParser.json({limit: "1000mb"}));
 
-const appConsumerKey = credentials.getConsumerKey();
-const appConsumerSecret = credentials.getConsumerSecret();
+const credentials: ICredentials = getCredentials();
+
+interface IMessage {
+    message: string,
+}
 
 const twitterSearchUrl = "https://api.twitter.com/1.1/search/tweets.json";
 
-function search(_req: Request, _res: Response, query: string, next) {
+function search(_req: Request, _res: Response, query: string, next: (result: IMessage) => void) {
     const oauth2 = new oauth.OAuth2(
-        appConsumerKey,
-        appConsumerSecret,
+        credentials.consumerKey,
+        credentials.consumerSecret,
         "https://api.twitter.com/",
-        null,
+        undefined,
         "oauth2/token",
-        null
+        undefined
     );
 
     oauth2.getOAuthAccessToken("", {grant_type: "client_credentials"}, (authError, accessToken) => {
@@ -83,9 +87,8 @@ app.post("/search", (req, res) => {
     }
 });
 
-app.put("/save", cors(), async (req, res, next) => {
-    const tweets: db.ITweets = req.body.tweets;
-
+app.put("/save", cors(), async (req: Request<{}, {}, ITweets>, res, next) => {
+    const tweets: ITweets = req.body;
     try {
         const result = await db.saveTweets(tweets);
         res.statusCode = 200;

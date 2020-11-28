@@ -11,17 +11,17 @@ const initialState = {
 
 export function search_reducer(state=[initialState], action){
 	switch(action.type){
-		case (CHANGE_TEXT):
+		case CHANGE_TEXT:
 			return {...state, text: action.text };
-		case (SET_SEARCHRESULT):
+		case SET_SEARCHRESULT:
 			return { ...state, searchResult: action.json, errorMessage: null};
-		case (TWEETSLOADING):
+		case TWEETSLOADING:
 			return {...state, tweetsLoading: action.loading };
-		case (TWEETLOADPROGRESS):
+		case TWEETLOADPROGRESS:
 			return {...state, tweetLoadProgress: action.progress };
-		case (ERRORMESSAGE):
+		case ERRORMESSAGE:
             return {...state, errorMessage: action.errorMessage };
-        case (SET_SAVESEARCHDIALOG_OPEN):
+        case SET_SAVESEARCHDIALOG_OPEN:
             return {...state, saveSearchDialogOpen: action.open };
 		default:
 			return state

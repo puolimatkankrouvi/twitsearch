@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { connectionString } from "./dbConfig";
+import { getConnectionString } from "./dbConfig";
 
 const tweetSchema = new mongoose.Schema({
     text: String,
@@ -36,7 +36,7 @@ interface IUser {
 }
 
 export async function saveTweets(tweetJson: ITweets): Promise<mongoose.Document> {
-    await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true });
 
     const tweets = [];
 
