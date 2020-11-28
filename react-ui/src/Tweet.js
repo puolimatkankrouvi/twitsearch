@@ -6,7 +6,7 @@ export function Tweet(props) {
         <div className="p-col-12">
             <div className="p-grid">
                 <div className="p-col-2">
-                    <img src={tweet.user.profile_image_url || ""} alt={tweet.user.profile_image_url}/>
+                    <img src={tweet.user.profile_image_url || ""} alt={tweet.user.profile_image_url} loading="lazy"/>
                     <div><p>{tweet.user.name}</p></div>
                 </div>
                 <div className="p-col-8">{tweet.text}</div>

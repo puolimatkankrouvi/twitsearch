@@ -1,18 +1,16 @@
 import React from 'react';
 import {connect} from "react-redux";
-import './Body.css';
 import TweetList from "./TweetList";
 import SaveSearchDialog from "./SaveSearchDialog";
-import 'primereact/resources/themes/nova/theme.css';
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
+import SearchBarContainer from "./SearchBarContainer";
 
 
 const body = (props) => {
-	return <body>       
+	return <div>
+		<SearchBarContainer />       
 		<TweetList />
 		{props.searchResult ? <SaveSearchDialog /> : null}
-	</body>
+	</div>
 };
 
 function mapStateToProps(state) {

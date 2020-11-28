@@ -1,21 +1,9 @@
-.Header {
-  background-color: #1a237e;
-  height: 70px;
-  margin: 0;
-  color: white;
-  top: 0;
-  position: sticky;
-}
-
 .app-title{
   font-size: 24px;
-  margin: 4px 0 0 0;
+  color: #2196F3;
+  margin: 4px 4px;
   letter-spacing: 2px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.search-bar {
-  margin: 8px 0 0 0;
 }
 
 .ui-progressbar .ui-progressbar-value {
