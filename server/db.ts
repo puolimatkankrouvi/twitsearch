@@ -35,7 +35,7 @@ interface IUser {
     screen_name: string;
 }
 
-export async function saveTweets(tweetJson: ITweets) {
+export async function saveTweets(tweetJson: ITweets): Promise<mongoose.Document> {
     await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
     const tweets = [];

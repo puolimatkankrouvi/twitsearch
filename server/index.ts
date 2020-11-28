@@ -22,7 +22,7 @@ const appConsumerSecret = credentials.getConsumerSecret();
 
 const twitterSearchUrl = "https://api.twitter.com/1.1/search/tweets.json";
 
-function search(req: Request, res: Response, query: string, next) {
+function search(_req: Request, _res: Response, query: string, next) {
     const oauth2 = new oauth.OAuth2(
         appConsumerKey,
         appConsumerSecret,
@@ -32,7 +32,7 @@ function search(req: Request, res: Response, query: string, next) {
         null
     );
 
-    oauth2.getOAuthAccessToken("", {grant_type: "client_credentials"}, (authError, accessToken, refreshToken, result) => {
+    oauth2.getOAuthAccessToken("", {grant_type: "client_credentials"}, (authError, accessToken) => {
         if (authError) {
             next({message: "Access token error"});
         }
@@ -49,9 +49,9 @@ function search(req: Request, res: Response, query: string, next) {
                     next({message: "Error in search"});
                 }
             })
-            .catch((searchError) => {
+            .catch(() => {
                 next({message: "Error in search"});
-        });
+            });
         }
     );
 }
