@@ -32,5 +32,5 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    workingDir: 'reac-ui'
+    workingDir: 'react-ui'
     customCommand: 'run build'
