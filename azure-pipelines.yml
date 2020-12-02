@@ -22,7 +22,7 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    customCommand: 'run build'
+    customCommand: 'build'
 
 - task: Npm@1
   inputs:
@@ -33,4 +33,4 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'reac-ui'
-    customCommand: 'npm run build'
+    customCommand: 'run build'
