@@ -15,7 +15,22 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+- task: Npm@1
+  inputs:
+    command: 'install'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run build'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'react-ui'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'reac-ui'
+    customCommand: 'npm run build'
