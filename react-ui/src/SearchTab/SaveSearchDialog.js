@@ -4,8 +4,8 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from "primereact/toast";
-import { setSaveSearchDialogOpen } from "./redux/actions";
-import { save } from "./apiCalls";
+import { setSaveSearchDialogOpen } from "../redux/actions";
+import { save } from "../apiCalls";
 import SimpleReactValidator from "simple-react-validator";
 
 const saveSearchDialog = (props) => {

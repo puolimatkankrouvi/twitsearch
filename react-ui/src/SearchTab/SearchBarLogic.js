@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
-import { search } from "./apiCalls";
-import {changeText, searchToState, setErrorMessage, setTweetLoadProgress, setTweetsLoading} from './redux/actions.js';
+import { search } from "../apiCalls";
+import {changeText, searchToState, setErrorMessage, setTweetLoadProgress, setTweetsLoading} from '../redux/actions.js';
 
 import SearchBar from './SearchBar';
 

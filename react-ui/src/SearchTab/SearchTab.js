@@ -1,9 +1,8 @@
 import React from 'react';
 import {connect} from "react-redux";
-import TweetList from "./TweetList";
+import TweetList from "../TweetList";
 import SaveSearchDialog from "./SaveSearchDialog";
 import SearchBarContainer from "./SearchBarContainer";
-
 
 const body = (props) => {
 	return <div>

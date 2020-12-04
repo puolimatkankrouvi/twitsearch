@@ -1,22 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Header.css';
 import { Menubar } from "primereact/menubar";
+import { useHistory } from "react-router-dom";
 
-export default class Header extends Component {
+export default function Header() {
+	const history = useHistory();
+	const title = <h1 className="app-title">Twitsearch</h1>;
 
-	render(){
-		const title = <h1 className="app-title">Twitsearch</h1>;
-		return(
-			<div>
-			<Menubar
-				/*style={{
-					backgroundColor: "#1a237e",
-					color: "white",
-				}}*/
-				start={title}
-			/>
-			</div>
-		)
-	}
+	const navigateToPage = React.useCallback(
+		(path) => {
+			history.push(path);
+		},
+		[]
+	);
 
+	const menuItems = [
+		{label: "Search", command: () => navigateToPage("/")},
+	];
+
+	return(
+		<Menubar
+			start={title}
+			model={menuItems}
+		/>
+	);
 }

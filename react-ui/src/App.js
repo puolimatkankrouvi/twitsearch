@@ -6,15 +6,23 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
 import Header from './Header.js';
-import Body from './Body.js';
+import SearchTab from './SearchTab/SearchTab';
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { createBrowserHistory } from "history";
+const history = createBrowserHistory();
 
 class App extends Component {
   render() {
     return (
-        <div className="App">
-          <Header />
-          <Body />
-        </div>
+    <div className="App">       
+      <Router history={history}>     
+        <Header />
+        <Switch>     
+          <Route path="/" component={SearchTab} />
+        </Switch>
+      </Router>
+    </div> 
     )
   }
 }
