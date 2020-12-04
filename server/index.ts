@@ -91,7 +91,10 @@ app.post("/search", (req, res) => {
 
 app.get("/oldsearches", async (req: Request<{}, {}, {},{page?: number}>, res, next) => {
     try {     
-        const page = req.query.page ?? 0;
+        let page = 0;
+        if (req.query.page) {
+            page = req.query.page;
+        }
 
         const tweetSearches = await db.getTweetSearches(page);
         res.statusCode = 200;
