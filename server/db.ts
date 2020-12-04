@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { stringify } from "querystring";
 import { getConnectionString } from "./dbConfig";
 
 const tweetSchema = new mongoose.Schema({
@@ -16,9 +17,9 @@ const tweetCollectionSchema = new mongoose.Schema({
     name: String,
 });
 
-const TweetCollection = mongoose.model("TweetCollection", tweetCollectionSchema);
+const TweetSearch = mongoose.model("TweetCollection", tweetCollectionSchema);
 
-export interface ITweets {
+export interface ITweetSearch {
     date: string;
     name: string;
     statuses: ReadonlyArray<ITweet>;
@@ -35,7 +36,23 @@ interface IUser {
     screen_name: string;
 }
 
-export async function saveTweets(tweetJson: ITweets): Promise<mongoose.Document> {
+const pageSize = 100;
+
+export async function getTweetSearches(page: number) {
+    await mongoose.connect(getConnectionString(), {useNewUrlParser: true, useUnifiedTopology: true});
+
+    const skip = page * pageSize;
+    const tweetSearches = await TweetSearch.find(
+        {},
+        "name date _id",
+        { limit: 100, skip }
+    )
+    .exec();
+
+    return tweetSearches;
+}
+
+export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Document> {
     await mongoose.connect(getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true });
 
     const tweets = [];
@@ -51,11 +68,11 @@ export async function saveTweets(tweetJson: ITweets): Promise<mongoose.Document>
         tweets.push(tweet);
     }
 
-    const tweetCollection = new TweetCollection({
+    const tweetSearch = new TweetSearch({
         date: tweetJson.date,
         name: tweetJson.name,
         tweets,
     });
 
-    return await tweetCollection.save();
+    return await tweetSearch.save();
 }

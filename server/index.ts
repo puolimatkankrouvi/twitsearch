@@ -2,11 +2,13 @@ import axios from "axios";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, {Request, Response } from "express";
+import { syncBuiltinESMExports } from "module";
 import oauth from "oauth";
 import path from "path";
+import { nextTick } from "process";
 import { ICredentials, getCredentials } from "./credentials";
 import * as db from "./db";
-import { ITweets } from "./db";
+import { ITweetSearch } from "./db";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -87,10 +89,23 @@ app.post("/search", (req, res) => {
     }
 });
 
-app.put("/save", cors(), async (req: Request<{}, {}, ITweets>, res, next) => {
-    const tweets: ITweets = req.body;
+app.get("/searches", async (req: Request<{}, {}, {},{page?: number}>, res, next) => {
+    try {     
+        const page = req.query.page ?? 0;
+
+        const tweetSearches = await db.getTweetSearches(page);
+        res.statusCode = 200;
+        res.send(tweetSearches);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
+app.put("/save", cors(), async (req: Request<{}, {}, ITweetSearch>, res, next) => {
+    const tweetSearch: ITweetSearch = req.body;
     try {
-        const result = await db.saveTweets(tweets);
+        const result = await db.saveTweets(tweetSearch);
         res.statusCode = 200;
         res.send(result);
     }
