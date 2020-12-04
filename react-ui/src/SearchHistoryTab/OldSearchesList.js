@@ -7,8 +7,8 @@ import ErrorMessage from "../ErrorMessage";
 
 function OldSearchesList(props) {
     const [loading, setLoading] = React.useState(true);
-    const [oldSearches, setOldSearches] = React.UseState([]);
-    const [errorMessage, setErrorMessage] = React.UseState(null);
+    const [oldSearches, setOldSearches] = React.useState([]);
+    const [errorMessage, setErrorMessage] = React.useState(null);
 
     React.useEffect(
         () => {

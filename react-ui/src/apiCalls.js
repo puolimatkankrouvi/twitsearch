@@ -27,10 +27,12 @@ export function search(searchText, config, successCallback, errorCallback) {
 }
 
 export function getOldSearches(successCallback, errorCallback) {
-	Axios.post(oldSearchesUrl)
+	Axios.get(oldSearchesUrl)
 		.then(
 			result => {
-				successCallback(result);
+				if (result.data) {
+					successCallback(result.data);
+				}
 			},
 			error => {
 				errorCallback("Error loading search history.");

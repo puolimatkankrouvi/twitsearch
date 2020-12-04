@@ -20,7 +20,7 @@ class App extends Component {
       <Router history={history}>     
         <Header />
         <Switch>     
-          <Route path="/" component={SearchTab} />
+          <Route path="/" component={OldSearchesList} />
           <Route path="/history" component={OldSearchesList} />
         </Switch>
       </Router>

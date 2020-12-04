@@ -5,10 +5,10 @@ export default function previousSearch(props) {
     return (
         <div className="p-col-12">
             <div className="p-grid">
-                <div className="p-col-10">
+                <div className="p-col-5">
                     <div><p>{search.name}</p></div>
                 </div>
-                <div className="p-col-2">
+                <div className="p-col-5">
                     <div>{search.date.toLocaleString()}</div>
                 </div>
             </div>
