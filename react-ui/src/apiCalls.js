@@ -4,6 +4,7 @@ const port = 8000;
 
 const searchUrl = `http://localhost:${port}/search/`;
 const saveUrl = `http://localhost:${port}/save/`;
+const oldSearchesUrl = `http://localhost:${port}/oldsearches/`;
 
 export function search(searchText, config, successCallback, errorCallback) {
 	const encodedText = encodeURI(searchText);
@@ -21,6 +22,18 @@ export function search(searchText, config, successCallback, errorCallback) {
 			error => {
 				const errorMessage = typeof error === "string" ? error : error.message;
 				errorCallback(errorMessage);
+			}
+		);
+}
+
+export function getOldSearches(successCallback, errorCallback) {
+	Axios.post(oldSearchesUrl)
+		.then(
+			result => {
+				successCallback(result);
+			},
+			error => {
+				errorCallback("Error loading search history.");
 			}
 		);
 }

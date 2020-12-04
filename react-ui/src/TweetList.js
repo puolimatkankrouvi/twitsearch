@@ -1,7 +1,7 @@
 import * as React from "react";
 import {connect} from "react-redux";
 import {DataView} from 'primereact/dataview';
-import TweetLoadingIndicator from "./TweetListLoadingIndicator";
+import LoadingIndicator from "./LoadingIndicator";
 import ErrorMessage from "./ErrorMessage";
 
 import {Tweet} from "./Tweet";
@@ -15,7 +15,7 @@ function TweetList(props) {
 
     if (tweetsLoading) {
         return (
-            <TweetLoadingIndicator />
+            <LoadingIndicator />
         );
     }
 

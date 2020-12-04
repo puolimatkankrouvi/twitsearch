@@ -1,4 +1,4 @@
-import {CHANGE_TEXT, SET_SEARCHRESULT, TWEETLOADPROGRESS, TWEETSLOADING, ERRORMESSAGE, SET_SAVESEARCHDIALOG_OPEN} from './actions.js';
+import { CHANGE_TEXT, SET_SEARCHRESULT, TWEETLOADPROGRESS, TWEETSLOADING, ERRORMESSAGE, SET_SAVESEARCHDIALOG_OPEN } from './actions.js';
 
 const initialState = {
 	text: "",
@@ -6,7 +6,7 @@ const initialState = {
 	tweetsLoading: false,
 	tweetLoadProgress: 0,
     errorMessage: null,
-    saveSearchDialogOpen: false,
+	saveSearchDialogOpen: false,
 };
 
 export function search_reducer(state=[initialState], action){
@@ -22,7 +22,7 @@ export function search_reducer(state=[initialState], action){
 		case ERRORMESSAGE:
             return {...state, errorMessage: action.errorMessage };
         case SET_SAVESEARCHDIALOG_OPEN:
-            return {...state, saveSearchDialogOpen: action.open };
+			return {...state, saveSearchDialogOpen: action.open };
 		default:
 			return state
 	}

@@ -10,6 +10,7 @@ import SearchTab from './SearchTab/SearchTab';
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import OldSearchesList from './SearchHistoryTab/OldSearchesList';
 const history = createBrowserHistory();
 
 class App extends Component {
@@ -20,6 +21,7 @@ class App extends Component {
         <Header />
         <Switch>     
           <Route path="/" component={SearchTab} />
+          <Route path="/history" component={OldSearchesList} />
         </Switch>
       </Router>
     </div> 

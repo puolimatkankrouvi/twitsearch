@@ -89,7 +89,7 @@ app.post("/search", (req, res) => {
     }
 });
 
-app.get("/searches", async (req: Request<{}, {}, {},{page?: number}>, res, next) => {
+app.get("/oldsearches", async (req: Request<{}, {}, {},{page?: number}>, res, next) => {
     try {     
         const page = req.query.page ?? 0;
 
