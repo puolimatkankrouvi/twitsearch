@@ -40,17 +40,29 @@ const pageSize = 100;
 
 export async function getTweetSearches(page: number) {
     await mongoose.connect(getConnectionString(), {useNewUrlParser: true, useUnifiedTopology: true});
-
+    
     const skip = page * pageSize;
     const tweetSearches = await TweetSearch.find(
         {},
         "name date _id",
         { limit: 100, skip }
+        )
+        .sort({"date": -1})
+        .exec();
+        
+        return tweetSearches;
+    }
+    
+export async function getTweetSearchWithTweets(tweetSearchId: string): Promise<mongoose.Document> {
+    await mongoose.connect(getConnectionString(), {useNewUrlParser: true, useUnifiedTopology: true});
+    const tweetSearch = await TweetSearch.findOne(
+        {_id: tweetSearchId},
+        "_id",
     )
-    .sort({"date": -1})
+    .populate("tweets")
     .exec();
 
-    return tweetSearches;
+    return tweetSearch ?? new TweetSearch();
 }
 
 export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Document> {

@@ -105,6 +105,17 @@ app.get("/oldsearches", async (req: Request<{}, {}, {},{page?: number}>, res, ne
     }
 });
 
+app.get("/oldsearches/:searchId/", async (req: Request<{searchId: string},{},{}>, res, next) => {
+    try {
+        const tweetSearch = await db.getTweetSearchWithTweets(req.params.searchId);
+        res.statusCode = 200;
+        res.send(tweetSearch);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+
 app.put("/save", cors(), async (req: Request<{}, {}, ITweetSearch>, res, next) => {
     const tweetSearch: ITweetSearch = req.body;
     try {
@@ -116,8 +127,5 @@ app.put("/save", cors(), async (req: Request<{}, {}, ITweetSearch>, res, next) =
         next(error);
     }
 });
-
-// All remaining requests return the React app, so it can handle routing.
-// app.get("*", (request, response) => response.sendFile(path.resolve(__dirname, "../react-ui/build", "index.html")));
 
 app.listen(PORT);
