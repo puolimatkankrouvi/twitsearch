@@ -4,7 +4,7 @@ import OldSearch from "./OldSearch";
 import LoadingIndicator from "../LoadingIndicator";
 
 function OldSearchesList(props) {
-    const {errorMessage, oldSearches, loading} = {...props};
+    const { oldSearches, loading } = {...props};
 
     if (loading) {
         return (
