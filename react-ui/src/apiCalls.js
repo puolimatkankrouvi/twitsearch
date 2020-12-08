@@ -40,6 +40,20 @@ export function getOldSearches(successCallback, errorCallback) {
 		);
 }
 
+export function getOldSearchesWithTweets(searchId, successCallback, errorCallback) {
+	Axios.get(`oldSearchesUrl/${searchId}`)
+		.then(
+			result => {
+				if (result.data) {
+					successCallback(result.data);
+				}
+			},
+			error => {
+				errorCallback("Error loading tweets of old search.");
+			}
+		);
+}
+
 export function save(searchResult, name) {
 	const body = {
 		name,

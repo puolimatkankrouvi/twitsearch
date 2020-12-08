@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { stringify } from "querystring";
 import { getConnectionString } from "./dbConfig";
 
 const tweetSchema = new mongoose.Schema({
@@ -17,7 +16,7 @@ const tweetCollectionSchema = new mongoose.Schema({
     name: String,
 });
 
-const TweetSearch = mongoose.model("TweetCollection", tweetCollectionSchema);
+const TweetSearch = mongoose.model("TweetSearch", tweetCollectionSchema);
 
 export interface ITweetSearch {
     date: string;
@@ -55,14 +54,11 @@ export async function getTweetSearches(page: number) {
     
 export async function getTweetSearchWithTweets(tweetSearchId: string): Promise<mongoose.Document> {
     await mongoose.connect(getConnectionString(), {useNewUrlParser: true, useUnifiedTopology: true});
-    const tweetSearch = await TweetSearch.findOne(
-        {_id: tweetSearchId},
-        "_id",
-    )
+    const tweetSearch = await TweetSearch.findById(tweetSearchId, "tweets")
     .populate("tweets")
     .exec();
 
-    return tweetSearch ?? new TweetSearch();
+    return tweetSearch !== null ? tweetSearch : new TweetSearch();
 }
 
 export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Document> {
@@ -79,6 +75,7 @@ export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Docu
         });
 
         tweets.push(tweet);
+        await tweet.save();
     }
 
     const tweetSearch = new TweetSearch({
