@@ -47,6 +47,7 @@ export async function getTweetSearches(page: number) {
         "name date _id",
         { limit: 100, skip }
     )
+    .sort({"date": -1})
     .exec();
 
     return tweetSearches;

@@ -1,31 +1,10 @@
 import * as React from "react";
 import {DataView} from 'primereact/dataview';
-import PreviousSearch from "./OldSearch";
-import { getOldSearches } from "../apiCalls";
-import { reducer } from "./redux/reducers";
-import { SET_OLD_SEARCHES, SET_ERROR_MESSAGE } from "./redux/actions";
+import OldSearch from "./OldSearch";
 import LoadingIndicator from "../LoadingIndicator";
-import ErrorMessage from "../ErrorMessage";
 
-const initialState = {
-    loading: true,
-    oldSearches: [],
-    errorMessage: null,
-};
-
-function OldSearchesList() {
-    const [state, dispatch] = React.useReducer(reducer, initialState);
-    const {errorMessage, oldSearches, loading} = {...state};
-
-    React.useEffect(
-        () => {
-            const successCallback = (oldSearches) => {dispatch({type: SET_OLD_SEARCHES, oldSearches });};        
-			const errorCallback = (errorMessage) => (dispatch({ type: SET_ERROR_MESSAGE, errorMessage }));
-            
-            getOldSearches(successCallback, errorCallback);
-        },
-        []
-    );
+function OldSearchesList(props) {
+    const {errorMessage, oldSearches, loading} = {...props};
 
     if (loading) {
         return (
@@ -33,10 +12,7 @@ function OldSearchesList() {
         );
     }
 
-    return <div>
-        <DataView value={oldSearches} layout="list" itemTemplate={itemTemplate} header={getHeader()} style={{margin: "20px 0 0 0"}}/>
-        {errorMessage ? <ErrorMessage errorMessage={errorMessage} /> : null}
-    </div>;
+    return <DataView value={oldSearches} layout="list" itemTemplate={itemTemplate} header={getHeader()} style={{margin: "20px 0 0 0"}}/>;
 }
 
 function itemTemplate(search, _) {
@@ -44,7 +20,7 @@ function itemTemplate(search, _) {
         return null;
     }
    
-    return <PreviousSearch search={search} />;
+    return <OldSearch search={search} />;
 }
 
 function getHeader() {

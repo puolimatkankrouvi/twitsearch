@@ -1,2 +1,0 @@
-export const SET_OLD_SEARCHES = "SET_OLD_SEARCHES";
-export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";

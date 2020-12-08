@@ -25,11 +25,11 @@ class SearchBar extends Component {
 					placeholder={"...Search from tweets"}
 					style={{width: "300px"}}
 				/>
-					<Button
-						label="Search"
-						onClick={this.props.sendSearch}		
-						style={{margin: "0 0 0 6px"}}
-					/>
+				<Button
+					label="Search"
+					onClick={this.props.sendSearch}		
+					style={{margin: "0 0 0 6px"}}
+				/>
 			</div>
 		)
 	}
