@@ -1,10 +1,10 @@
 import * as React from "react";
 import {Panel} from "primereact/panel";
 
-const seachHistoryHeader = (props) => {
+const seachHistoryHeader = () => {
     return (
         <Panel>
-            <h3>Search history</h3>
+            <h3>Saved searches</h3>
         </Panel>
     );
 };

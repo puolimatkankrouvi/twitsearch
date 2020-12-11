@@ -14,7 +14,7 @@ export default function Header() {
 
 	const menuItems = [
 		{label: "Search", command: () => navigateToPage("/")},
-		{label: "History", command: () => navigateToPage("/history")},
+		{label: "Saved searches", command: () => navigateToPage("/history")},
 	];
 
 	return(

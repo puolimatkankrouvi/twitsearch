@@ -1,13 +1,13 @@
 import React from 'react';
 import {connect} from "react-redux";
-import TweetList from "../TweetList";
+import TweetListLogic from "./TweetListLogic";
 import SaveSearchDialog from "./SaveSearchDialog";
 import SearchBarContainer from "./SearchBarContainer";
 
 const body = (props) => {
 	return <div>
 		<SearchBarContainer />       
-		<TweetList />
+		<TweetListLogic />
 		{props.searchResult ? <SaveSearchDialog /> : null}
 	</div>
 };
