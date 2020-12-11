@@ -16,3 +16,6 @@ server/build
 tehtavananto.txt
 
 .eslintcache
+
+.vs
+react-ui/.vs
