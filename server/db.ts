@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { getConnectionString } from "./dbConfig";
+import dotenv from "dotenv";
+dotenv.config();
 
 const tweetSchema = new mongoose.Schema({
     text: String,
@@ -37,8 +38,10 @@ interface IUser {
 
 const pageSize = 100;
 
+const connectionString = process.env.CONNECTION_STRING || "";
+
 export async function getTweetSearches(page: number) {
-    await mongoose.connect(getConnectionString(), {useNewUrlParser: true, useUnifiedTopology: true});
+    await mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
     
     const skip = page * pageSize;
     const tweetSearches = await TweetSearch.find(
@@ -53,7 +56,7 @@ export async function getTweetSearches(page: number) {
     }
     
 export async function getTweetSearchWithTweets(tweetSearchId: string): Promise<mongoose.Document> {
-    await mongoose.connect(getConnectionString(), {useNewUrlParser: true, useUnifiedTopology: true});
+    await mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
     const tweetSearch = await TweetSearch.findById(tweetSearchId, "tweets")
     .populate("tweets")
     .exec();
@@ -62,7 +65,7 @@ export async function getTweetSearchWithTweets(tweetSearchId: string): Promise<m
 }
 
 export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Document> {
-    await mongoose.connect(getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
     const tweets = [];
 

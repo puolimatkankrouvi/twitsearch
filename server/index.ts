@@ -1,15 +1,14 @@
+import dotenv from "dotenv";
 import axios from "axios";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, {Request, Response } from "express";
-import { syncBuiltinESMExports } from "module";
 import oauth from "oauth";
 import path from "path";
-import { nextTick } from "process";
-import { ICredentials, getCredentials } from "./credentials";
 import * as db from "./db";
 import { ITweetSearch } from "./db";
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -20,8 +19,6 @@ app.use(express.static(path.resolve(__dirname, "../react-ui/build")));
 app.use(bodyParser.urlencoded({extended: false, limit: "1000mb"}));
 app.use(bodyParser.json({limit: "1000mb"}));
 
-const credentials: ICredentials = getCredentials();
-
 interface IMessage {
     message: string,
 }
@@ -30,8 +27,8 @@ const twitterSearchUrl = "https://api.twitter.com/1.1/search/tweets.json";
 
 function search(_req: Request, _res: Response, query: string, next: (result: IMessage) => void) {
     const oauth2 = new oauth.OAuth2(
-        credentials.consumerKey,
-        credentials.consumerSecret,
+        process.env.CONSUMER_KEY || "",
+        process.env.CONSUMER_SECRET || "",
         "https://api.twitter.com/",
         undefined,
         "oauth2/token",
