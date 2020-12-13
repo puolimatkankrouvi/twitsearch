@@ -1,12 +1,11 @@
 import dotenv from "dotenv";
-import axios from "axios";
 import bodyParser from "body-parser";
 import cors from "cors";
-import express, {Request, Response } from "express";
-import oauth from "oauth";
+import express, { Request } from "express";
 import path from "path";
 import * as db from "./db";
 import { ITweetSearch } from "./db";
+import { search } from "./search";
 
 dotenv.config();
 const app = express();
@@ -18,46 +17,6 @@ app.use(express.static(path.resolve(__dirname, "../react-ui/build")));
 // Body parser
 app.use(bodyParser.urlencoded({extended: false, limit: "1000mb"}));
 app.use(bodyParser.json({limit: "1000mb"}));
-
-interface IMessage {
-    message: string,
-}
-
-const twitterSearchUrl = "https://api.twitter.com/1.1/search/tweets.json";
-
-function search(_req: Request, _res: Response, query: string, next: (result: IMessage) => void) {
-    const oauth2 = new oauth.OAuth2(
-        process.env.CONSUMER_KEY || "",
-        process.env.CONSUMER_SECRET || "",
-        "https://api.twitter.com/",
-        undefined,
-        "oauth2/token",
-        undefined
-    );
-
-    oauth2.getOAuthAccessToken("", {grant_type: "client_credentials"}, (authError, accessToken) => {
-        if (authError) {
-            next({message: "Access token error"});
-        }
-
-        const headers = {Authorization: `Bearer ${accessToken}` };
-
-        const encodedQuery = encodeURIComponent(query);
-        const url = `${twitterSearchUrl}?q=${encodedQuery}&count=100`;
-        axios.get(url, {headers})
-            .then((response) => {
-                if (response.status === 200) {
-                    next(response.data);
-                } else {
-                    next({message: "Error in search"});
-                }
-            })
-            .catch(() => {
-                next({message: "Error in search"});
-            });
-        }
-    );
-}
 
 app.use(cors());
 
