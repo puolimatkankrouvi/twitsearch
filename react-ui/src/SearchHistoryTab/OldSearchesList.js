@@ -4,7 +4,18 @@ import OldSearch from "./OldSearch";
 import LoadingIndicator from "../LoadingIndicator";
 
 function OldSearchesList(props) {
-    const { oldSearches, loading } = {...props};
+    const { oldSearches, loading, onSearchSelected } = {...props};
+
+    const itemTemplate = React.useCallback(
+        (search, _) => {
+            if (!search) {
+                return null;
+            }
+           
+            return <OldSearch search={search} onSearchSelected={onSearchSelected} />;
+        },
+        [onSearchSelected]
+    );
 
     if (loading) {
         return (
@@ -13,14 +24,6 @@ function OldSearchesList(props) {
     }
 
     return <DataView value={oldSearches} layout="list" itemTemplate={itemTemplate} header={getHeader()} style={{margin: "20px 0 0 0"}}/>;
-}
-
-function itemTemplate(search, _) {
-    if (!search) {
-        return null;
-    }
-   
-    return <OldSearch search={search} />;
 }
 
 function getHeader() {

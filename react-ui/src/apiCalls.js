@@ -40,8 +40,8 @@ export function getOldSearches(successCallback, errorCallback) {
 		);
 }
 
-export function getOldSearchesWithTweets(searchId, successCallback, errorCallback) {
-	Axios.get(`oldSearchesUrl/${searchId}`)
+export function getOldSearchWithTweets(searchId, successCallback, errorCallback) {
+	Axios.get(`${oldSearchesUrl}${searchId}`)
 		.then(
 			result => {
 				if (result.data) {

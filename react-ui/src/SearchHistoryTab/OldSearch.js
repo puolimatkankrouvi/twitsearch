@@ -1,11 +1,20 @@
 import * as React from "react";
 
 export default function previousSearch(props) {
-    const search = props.search;
+    const [mouseHover, setMouseHover] = React.useState(false);
+
+    const {search, onSearchSelected } = {...props};
     const date = search.date ? new Date(search.date).toLocaleString() : null;
+
     return (
         <div className="p-col-12">
-            <div className="p-grid">
+            <div
+                className="p-grid"
+                style={mouseHover ? { cursor: "pointer", background: "#E3F2FD"} : undefined}
+                onClick={ev => onSearchSelected && onSearchSelected(search)}
+                onMouseEnter={onSearchSelected ? ev => setMouseHover(true) : undefined}
+                onMouseLeave={onSearchSelected ? ev => setMouseHover(false) : undefined}
+            >
                 <div className="p-col-5">
                     <p>{search.name}</p>
                 </div>
