@@ -3,7 +3,7 @@ export const CHANGE_TEXT = 'CHANGE_TEXT';
 export const SET_SEARCHRESULT = 'SET_SEARCHRESULT';
 export const TWEETSLOADING = 'TWEETSLOADING';
 export const TWEETLOADPROGRESS = "TWEETLOADPROGRESS";
-export const ERRORMESSAGE = "ERRORMESSAGE";
+export const SEARCH_ERRORMESSAGE = "SEARCH_ERRORMESSAGE";
 export const SET_SAVESEARCHDIALOG_OPEN = "SET_SAVESEARCHDIALOG_OPEN";
 
 /*Action creators*/
@@ -35,9 +35,9 @@ export function setTweetLoadProgress(progress) {
 	};
 }
 
-export function setErrorMessage(errorMessage) {
+export function setSearchErrorMessage(errorMessage) {
 	return {
-		type: ERRORMESSAGE,
+		type: SEARCH_ERRORMESSAGE,
 		errorMessage,
 	};
 }

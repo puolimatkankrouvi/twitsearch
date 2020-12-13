@@ -14,13 +14,13 @@ function TweetListLogic(props) {
 }
 
 function mapStateToProps(state) {
-    const { searchResult, tweetsLoading, errorMessage } = state;
+    const { searchResult, tweetsLoading, searchResultErrorMessage } = state;
     let tweets = [];
     if (searchResult && searchResult.statuses) {
         tweets = searchResult.statuses;
     }
 
-    return {tweets, tweetsLoading, errorMessage };
+    return {tweets, tweetsLoading, errorMessage: searchResultErrorMessage };
 }
 
 export default connect(mapStateToProps)(TweetListLogic);

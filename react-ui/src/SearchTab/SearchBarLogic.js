@@ -1,7 +1,7 @@
 import React from 'react';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { search } from "../apiCalls";
-import {changeText, searchToState, setErrorMessage, setTweetLoadProgress, setTweetsLoading} from '../redux/actions.js';
+import { changeText, searchToState, setSearchErrorMessage, setTweetLoadProgress, setTweetsLoading } from '../redux/actions.js';
 
 import SearchBar from './SearchBar';
 
@@ -71,7 +71,7 @@ function dispatchToProps(dispatch) {
 			dispatch(changeText(value));
 		},
 		setErrorMessage: errorMessage => {
-			dispatch(setErrorMessage(errorMessage));
+			dispatch(setSearchErrorMessage(errorMessage));
 		},
 	};
 }
