@@ -72,7 +72,7 @@ app.get("/oldsearches/:searchId/", async (req: Request<{searchId: string},{},{}>
     }
 });
 
-app.put("/save", cors(), async (req: Request<{}, {}, ITweetSearch>, res, next) => {
+app.put("/save", async (req: Request<{}, {}, ITweetSearch>, res, next) => {
     const tweetSearch: ITweetSearch = req.body;
     try {
         const result = await db.saveTweets(tweetSearch);
