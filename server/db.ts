@@ -4,12 +4,23 @@ dotenv.config();
 
 const tweetSchema = new mongoose.Schema({
     text: String,
+    created_at: String,
+
     username: String,
     screen_name: String,
-    created_at: String
+    profile_image_url: String,
 });
 
-const TweetModel = mongoose.model("TweetModel", tweetSchema);
+interface ITweetDbModel extends mongoose.Document {
+    text: string;
+    created_at: string;
+
+    username: string;
+    screen_name: string;
+    profile_image_url: string;
+}
+
+const TweetModel = mongoose.model<ITweetDbModel>("TweetModel", tweetSchema);
 
 const tweetCollectionSchema = new mongoose.Schema({
     tweets: [{type: mongoose.Schema.Types.ObjectId , ref: "TweetModel"}],
@@ -17,7 +28,13 @@ const tweetCollectionSchema = new mongoose.Schema({
     name: String,
 });
 
-const TweetSearch = mongoose.model("TweetSearch", tweetCollectionSchema);
+interface ITweetSearchDbModel extends mongoose.Document {
+    tweets: ReadonlyArray<ITweetDbModel>,
+    date: string,
+    name: string,
+}
+
+const TweetSearch = mongoose.model<ITweetSearchDbModel>("TweetSearch", tweetCollectionSchema);
 
 export interface ITweetSearch {
     date: string;
@@ -34,6 +51,7 @@ interface ITweet {
 interface IUser {
     name: string;
     screen_name: string;
+    profile_image_url: string;
 }
 
 const pageSize = 100;
@@ -45,23 +63,50 @@ export async function getTweetSearches(page: number) {
     
     const skip = page * pageSize;
     const tweetSearches = await TweetSearch.find(
-        {},
-        "name date _id",
-        { limit: 100, skip }
-        )
-        .sort({"date": -1})
-        .exec();
-        
-        return tweetSearches;
-    }
-    
-export async function getTweetSearchWithTweets(tweetSearchId: string): Promise<mongoose.Document> {
-    await mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
-    const tweetSearch = await TweetSearch.findById(tweetSearchId, "tweets")
-    .populate("tweets")
+            {},
+            "name date _id",
+            { limit: 100, skip }
+    )
+    .sort({"date": -1})
     .exec();
+        
+    return tweetSearches;
+}
 
-    return tweetSearch !== null ? tweetSearch : new TweetSearch();
+export interface ISearchWithTweets {
+    tweets: ReadonlyArray<ITweet>;
+}
+    
+export async function getTweetSearchWithTweets(tweetSearchId: string): Promise<ISearchWithTweets> {
+    await mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
+    const tweetSearch: ITweetSearchDbModel | null = await TweetSearch.findById(tweetSearchId, "tweets")
+        .populate("tweets")
+        .lean<ITweetSearchDbModel>()
+        .exec();
+
+    return tweetSearchToResult(tweetSearch);
+}
+
+function tweetSearchToResult(tweetSearch: ITweetSearchDbModel | null): ISearchWithTweets {
+    if (tweetSearch) {
+        // Putting user properties inside nested user object.
+        return {
+            ...tweetSearch,
+            tweets: tweetSearch.tweets.map(tweet => ({
+                created_at: tweet.created_at,
+                text: tweet.text,
+                user: {
+                    name: tweet.username,
+                    screen_name: tweet.screen_name,
+                    profile_image_url: tweet.profile_image_url,
+                }
+            })),
+        };
+    }
+
+    return {
+        tweets: [],
+    };
 }
 
 export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Document> {
@@ -75,6 +120,7 @@ export async function saveTweets(tweetJson: ITweetSearch): Promise<mongoose.Docu
             text: status.text,
             username: status.user.name,
             screen_name: status.user.screen_name,
+            profile_image_url: status.user.profile_image_url,
         });
 
         tweets.push(tweet);
