@@ -6,7 +6,7 @@
     "react-scripts": "4.0.1"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "marked": "^1.2.5",
     "primeflex": "^2.0.0",
