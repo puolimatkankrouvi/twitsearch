@@ -11,9 +11,9 @@ export default function previousSearch(props) {
             <div
                 className="p-grid"
                 style={mouseHover ? { cursor: "pointer", background: "#E3F2FD"} : undefined}
-                onClick={ev => onSearchSelected && onSearchSelected(search)}
-                onMouseEnter={onSearchSelected ? ev => setMouseHover(true) : undefined}
-                onMouseLeave={onSearchSelected ? ev => setMouseHover(false) : undefined}
+                onClick={() => onSearchSelected && onSearchSelected(search)}
+                onMouseEnter={onSearchSelected ? () => setMouseHover(true) : undefined}
+                onMouseLeave={onSearchSelected ? () => setMouseHover(false) : undefined}
             >
                 <div className="p-col-5">
                     <p>{search.name}</p>

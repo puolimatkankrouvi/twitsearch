@@ -2,7 +2,7 @@ import React from 'react';
 import {ProgressBar} from 'primereact/progressbar';
 import { connect } from 'react-redux';
 
-const tweetLoadingIndicator = (props) => {
+const tweetLoadingIndicator = () => {
     return (
         <div className="p-grid" style={{padding: "50px 0 0 0"}}>
             <div className="p-col-4" />

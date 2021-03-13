@@ -20,7 +20,7 @@ export default function TweetList(props) {
     return <DataView value={props.tweets} layout={"list"} itemTemplate={itemTemplate} header={getHeader()} style={{margin: "20px 0 0 0"}}/>;
 }
 
-function itemTemplate(tweet, layout) {
+function itemTemplate(tweet) {
     if (!tweet) {
         return null;
     }

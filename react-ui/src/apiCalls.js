@@ -34,7 +34,7 @@ export function getOldSearches(successCallback, errorCallback) {
 					successCallback(result.data);
 				}
 			},
-			error => {
+			() => {
 				errorCallback("Error loading search history.");
 			}
 		);
@@ -48,7 +48,7 @@ export function getOldSearchWithTweets(searchId, successCallback, errorCallback)
 					successCallback(result.data);
 				}
 			},
-			error => {
+			() => {
 				errorCallback("Error loading tweets of old search.");
 			}
 		);

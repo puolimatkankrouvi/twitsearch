@@ -1,5 +1,5 @@
 import * as React from "react";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -14,22 +14,24 @@ const saveSearchDialog = (props) => {
     const validator = React.useRef(new SimpleReactValidator());
     const toast = React.useRef(null);
 
+    const showTweetsSavedMessage = () => {
+        toast.current.show({
+            severity: "success",
+            summary: "Tweets saved",
+        });
+    }
+
+    const showErrorMessage = () => {
+        toast.current.show({
+            severity: "error",
+            summary: "Error when saving tweets",
+        });
+    }
+
     const saveSearch = React.useCallback(() => {
         if (validator.current.allValid()) {
             save(props.searchResult, searchName)
-                .then(
-                    result => {
-                        toast.current.show({
-                            severity: "success",
-                            summary: "Tweets saved",
-                        });
-                    },
-                    error => {
-                        toast.current.show({
-                            severity: "error",
-                            summary: "Error when saving tweets",
-                        });
-                    }
+                .then(showTweetsSavedMessage(), showErrorMessage(),
             );
 
             props.closeDialog();
@@ -41,7 +43,7 @@ const saveSearchDialog = (props) => {
     const footer = <div>
         <Button
             label="Save"
-            onClick={ev => saveSearch()}
+            onClick={() => saveSearch()}
         />
         <Button
             label="Cancel"

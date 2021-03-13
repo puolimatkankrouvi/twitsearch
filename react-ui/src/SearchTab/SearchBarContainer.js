@@ -17,7 +17,7 @@ class SearchBarContainer extends React.Component {
                 <Button
                     label="Save search..."
                     disabled={!this.props.searchResult}
-                    onClick={ev => this.props.setSaveSearchDialogOpen(true)}
+                    onClick={() => this.props.setSaveSearchDialogOpen(true)}
                 />
             </div>
         </div>;

@@ -7,7 +7,7 @@ function OldSearchesList(props) {
     const { oldSearches, loading, onSearchSelected } = {...props};
 
     const itemTemplate = React.useCallback(
-        (search, _) => {
+        (search) => {
             if (!search) {
                 return null;
             }
