@@ -23,7 +23,7 @@
     "@types/cors": "^2.8.9",
     "@types/mongoose": "^5.10.3",
     "@types/oauth": "^0.9.1",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bind-decorator": "^1.0.11",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
